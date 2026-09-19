@@ -35,64 +35,71 @@
             </div>
         </header>
 
-        <!-- PANEL DE FILTROS SIMPLIFICADO CON ACORDEÓN EN MÓVIL -->
+        <!-- PANEL DE FILTROS COMPACTO -->
         <section class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-4 sm:p-5 mb-6 shadow-lg backdrop-blur-sm">
             
-            <!-- FILTROS SIEMPRE VISIBLES: RANGO DE FECHAS -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- FILTROS PRINCIPALES: RANGO DE FECHAS EN LA MISMA FILA -->
+            <div class="grid grid-cols-2 gap-3 sm:gap-4">
                 <!-- Rango Desde -->
                 <div>
-                    <label for="mesDesde" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Desde (Mes/Año)</label>
-                    <select id="mesDesde" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
-                        <option value="">Cargando meses...</option>
+                    <label for="mesDesde" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Desde</label>
+                    <select id="mesDesde" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        <!-- Opciones cargadas dinámicamente -->
                     </select>
                 </div>
 
                 <!-- Rango Hasta -->
                 <div>
-                    <label for="mesHasta" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Hasta (Mes/Año)</label>
-                    <select id="mesHasta" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
-                        <option value="">Cargando meses...</option>
+                    <label for="mesHasta" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Hasta</label>
+                    <select id="mesHasta" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        <!-- Opciones cargadas dinámicamente -->
                     </select>
                 </div>
             </div>
 
-            <!-- BOTÓN PARA DESPLEGAR ACORDEÓN (SÓLO VISIBLE EN MÓVIL) -->
+            <!-- BOTÓN PARA DESPLEGAR ACORDEÓN EN MÓVIL -->
             <div class="sm:hidden mt-3 pt-2 border-t border-slate-700/50">
                 <button type="button" onclick="toggleFiltrosAvanzados()" class="w-full flex items-center justify-between text-xs font-semibold text-blue-400 py-1.5 focus:outline-none">
                     <span class="flex items-center gap-1.5">
                         <span>⚙️</span>
-                        <span>Filtros avanzados (Marca, Cilindrada, Propulsión)</span>
+                        <span>Filtros avanzados</span>
                     </span>
                     <span id="iconoAcordeon" class="transition-transform duration-200">▼</span>
                 </button>
             </div>
 
-            <!-- FILTROS AVANZADOS -->
+            <!-- FILTROS AVANZADOS (CILINDRADA MÍN/MÁX EN LA MISMA FILA) -->
             <div id="panelFiltrosAvanzados" class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 pt-3 border-t border-slate-700/50 sm:border-0 sm:pt-0">
                 
                 <!-- Filtro Marca -->
                 <div>
                     <label for="filtroMarca" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Marca</label>
-                    <input type="text" id="filtroMarca" placeholder="Ej: HONDA, YAMAHA..." class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition uppercase">
+                    <input type="text" id="filtroMarca" placeholder="Ej: HONDA, YAMAHA..." class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition uppercase">
                 </div>
 
-                <!-- Cilindrada Mínima -->
+                <!-- Cilindradas Mínima y Máxima en la misma fila -->
                 <div>
-                    <label for="cilMin" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Cilindrada Mín (cc)</label>
-                    <input type="number" id="cilMin" placeholder="Ej: 0" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Cilindrada (cc)</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="number" id="cilMin" placeholder="Mín (0)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        <input type="number" id="cilMax" placeholder="Máx (1200)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    </div>
                 </div>
 
-                <!-- Cilindrada Máxima -->
+                <!-- Filtro Estado (Nuevos / Usados Importación) -->
                 <div>
-                    <label for="cilMax" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Cilindrada Máx (cc)</label>
-                    <input type="number" id="cilMax" placeholder="Ej: 1200" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    <label for="filtroEstado" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Estado / Importación</label>
+                    <select id="filtroEstado" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        <option value="TODOS">TODOS (NUEVOS Y USADOS)</option>
+                        <option value="N">SOLO NUEVAS</option>
+                        <option value="U">SOLO USADAS (IMPORTACIÓN)</option>
+                    </select>
                 </div>
 
                 <!-- Propulsión -->
                 <div>
                     <label for="filtroPropulsion" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Propulsión</label>
-                    <select id="filtroPropulsion" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    <select id="filtroPropulsion" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                         <option value="TODAS">TODAS LAS PROPULSIONES</option>
                         <option value="GASOLINA">GASOLINA</option>
                         <option value="HYBRIDO">HÍBRIDO</option>
@@ -151,7 +158,7 @@
             <section class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-4 sm:p-5 shadow-lg">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                     <div>
-                        <h2 class="text-base sm:text-lg font-bold text-white">Evolución de Cuota de Mercado (%) - Top 10 Marcas</h2>
+                        <h2 class="text-base sm:text-lg font-bold text-white">Evolución Cuota de Mercado (%) - Top 10 </h2>
                         <p class="text-xs text-slate-400">Porcentaje mensual sobre el total de matriculaciones</p>
                     </div>
                 </div>
@@ -299,6 +306,11 @@
         let chartMarcasMovil = null;
         let chartModelosMovil = null;
 
+        const NOMBRES_MESES = [
+            "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
+        ];
+
         const COLORES_MARCAS = [
             '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
             '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#64748b'
@@ -333,13 +345,17 @@
                 selectHasta.innerHTML = "";
 
                 indexGlobal.forEach((item) => {
+                    const [yyyy, mm] = item.periodo.split("-");
+                    const nombreMes = NOMBRES_MESES[parseInt(mm, 10) - 1] || mm;
+                    const textoEtiqueta = `${nombreMes} ${yyyy}`;
+
                     const opt1 = document.createElement("option");
                     opt1.value = item.periodo;
-                    opt1.textContent = item.periodo;
+                    opt1.textContent = textoEtiqueta;
 
                     const opt2 = document.createElement("option");
                     opt2.value = item.periodo;
-                    opt2.textContent = item.periodo;
+                    opt2.textContent = textoEtiqueta;
 
                     selectDesde.appendChild(opt1);
                     selectHasta.appendChild(opt2);
@@ -348,7 +364,7 @@
                 // SELECCIÓN POR DEFECTO: ÚLTIMO AÑO (ÚLTIMOS 12 MESES)
                 if (indexGlobal.length > 0) {
                     const ultimoIdx = indexGlobal.length - 1;
-                    const primerIdx = Math.max(0, indexGlobal.length - 12); // Hace 12 meses
+                    const primerIdx = Math.max(0, indexGlobal.length - 12);
 
                     selectDesde.selectedIndex = primerIdx;
                     selectHasta.selectedIndex = ultimoIdx;
@@ -369,6 +385,7 @@
             const fMarca = document.getElementById("filtroMarca").value.trim().toUpperCase();
             const cilMin = parseInt(document.getElementById("cilMin").value) || 0;
             const cilMax = parseInt(document.getElementById("cilMax").value) || 999999;
+            const fEstado = document.getElementById("filtroEstado").value;
             const fProp = document.getElementById("filtroPropulsion").value;
 
             if (!mesDesde || !mesHasta) return;
@@ -398,6 +415,7 @@
                     dataMes.registros.forEach(reg => {
                         if (reg.cil < cilMin || reg.cil > cilMax) return;
                         if (fMarca && !reg.mar.includes(fMarca)) return;
+                        if (fEstado !== "TODOS" && reg.est !== fEstado) return;
 
                         if (fProp === "GASOLINA" && reg.pro !== "GASOLINA") return;
                         if (fProp === "ELECTRICO" && reg.pro !== "BEV") return;
@@ -468,7 +486,7 @@
 
             const pctNuevas = ((countNuevas / total) * 100).toFixed(1);
             document.getElementById("kpiNuevasUsadas").textContent = countNuevas.toLocaleString("es-ES");
-            document.getElementById("kpiNuevasUsadasPct").textContent = `${pctNuevas}% Nuevas (${(100 - pctNuevas).toFixed(1)}% Usadas)`;
+            document.getElementById("kpiNuevasUsadasPct").textContent = `${pctNuevas}% Nuevas (${(100 - pctNuevas).toFixed(1)}% Importadas)`;
 
             const pctElec = ((countElec / total) * 100).toFixed(1);
             document.getElementById("kpiElectricas").textContent = countElec.toLocaleString("es-ES");
