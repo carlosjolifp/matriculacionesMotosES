@@ -17,6 +17,14 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Custom scrollbar para la lista de marcas */
+        #listaCheckboxMarcas::-webkit-scrollbar {
+            width: 6px;
+        }
+        #listaCheckboxMarcas::-webkit-scrollbar-thumb {
+            background-color: #334155;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col justify-between">
@@ -43,7 +51,7 @@
                 <!-- Rango Desde -->
                 <div>
                     <label for="mesDesde" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Desde</label>
-                    <select id="mesDesde" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    <select id="mesDesde" onchange="cargarMarcasDisponibles()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                         <!-- Opciones cargadas dinámicamente -->
                     </select>
                 </div>
@@ -51,7 +59,7 @@
                 <!-- Rango Hasta -->
                 <div>
                     <label for="mesHasta" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Hasta</label>
-                    <select id="mesHasta" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    <select id="mesHasta" onchange="cargarMarcasDisponibles()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                         <!-- Opciones cargadas dinámicamente -->
                     </select>
                 </div>
@@ -68,21 +76,40 @@
                 </button>
             </div>
 
-            <!-- FILTROS AVANZADOS (CILINDRADA MÍN/MÁX EN LA MISMA FILA) -->
+            <!-- FILTROS AVANZADOS -->
             <div id="panelFiltrosAvanzados" class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 pt-3 border-t border-slate-700/50 sm:border-0 sm:pt-0">
                 
-                <!-- Filtro Marca -->
-                <div>
-                    <label for="filtroMarca" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Marca</label>
-                    <input type="text" id="filtroMarca" placeholder="Ej: HONDA, YAMAHA..." class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition uppercase">
+                <!-- DESPLEGABLE PERSONALIZADO DE MARCAS CON CHECKBOX Y CHIPS DE SELECCIÓN -->
+                <div class="relative">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Marcas</label>
+                    
+                    <!-- Botón del desplegable -->
+                    <button type="button" id="btnDesplegableMarcas" onclick="toggleDropdownMarcas()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 text-left flex justify-between items-center focus:ring-2 focus:ring-blue-500 outline-none">
+                        <span id="txtBotonMarcas" class="truncate">Todas las marcas</span>
+                        <span class="text-xs text-slate-400 ml-1">▼</span>
+                    </button>
+
+                    <!-- Menú emergente con lista de checkboxes -->
+                    <div id="menuDesplegableMarcas" class="hidden absolute left-0 right-0 z-50 mt-1 bg-slate-900 border border-slate-700 rounded-lg shadow-xl p-2 max-h-56 flex flex-col">
+                        <input type="text" id="buscarMarcaCheck" onkeyup="filtrarListaMarcasCheck()" placeholder="Buscar marca..." class="w-full bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded p-1.5 mb-2 outline-none focus:border-blue-500">
+                        
+                        <div id="listaCheckboxMarcas" class="overflow-y-auto space-y-1 text-xs text-slate-300">
+                            <!-- Checkboxes cargados dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Etiquetas (Chips) de marcas seleccionadas con botón "x" -->
+                    <div id="contenedorChipsMarcas" class="flex flex-wrap gap-1 mt-2">
+                        <!-- Chips dinámicos -->
+                    </div>
                 </div>
 
                 <!-- Cilindradas Mínima y Máxima en la misma fila -->
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Cilindrada (cc)</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="number" id="cilMin" placeholder="Mín (0)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
-                        <input type="number" id="cilMax" placeholder="Máx (1200)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        <input type="number" id="cilMin" step="100" min="0" placeholder="Mín (0)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        <input type="number" id="cilMax" step="100" min="0" placeholder="Máx (1200)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                     </div>
                 </div>
 
@@ -158,7 +185,7 @@
             <section class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-4 sm:p-5 shadow-lg">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                     <div>
-                        <h2 class="text-base sm:text-lg font-bold text-white">Evolución Cuota de Mercado (%) - Top 10 </h2>
+                        <h2 class="text-base sm:text-lg font-bold text-white">Evolución  Cuota de Mercado (%) - Top 10 /h2>
                         <p class="text-xs text-slate-400">Porcentaje mensual sobre el total de matriculaciones</p>
                     </div>
                 </div>
@@ -266,11 +293,11 @@
 
                     <!-- Botones de exportación -->
                     <div class="flex items-center gap-2 w-full md:w-auto">
-                        <button onclick="exportarCSV()" class="flex-1 md:flex-initial bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium text-xs px-3 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <button onclick="exportarCSV()" class="flex-1 md:flex-initial bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium text-xs px-3.5 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5">
                             <span>📄</span>
                             <span>Exportar CSV</span>
                         </button>
-                        <button onclick="exportarExcel()" class="flex-1 md:flex-initial bg-emerald-700 hover:bg-emerald-600 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <button onclick="exportarExcel()" class="flex-1 md:flex-initial bg-emerald-700 hover:bg-emerald-600 text-white font-medium text-xs px-3.5 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5">
                             <span>📊</span>
                             <span>Exportar Excel</span>
                         </button>
@@ -299,6 +326,9 @@
         let listaTablaFiltrada = [];
         let modoAgrupacionActual = 'MARCA';
         
+        let marcasSeleccionadasSet = new Set();
+        let todasLasMarcasLista = [];
+
         let paginaActual = 1;
         let registrosPorPagina = 25;
 
@@ -318,6 +348,15 @@
 
         document.addEventListener("DOMContentLoaded", async () => {
             await cargarIndiceMeses();
+
+            // Cerrar el menú desplegable al hacer clic fuera
+            document.addEventListener("click", (e) => {
+                const menu = document.getElementById("menuDesplegableMarcas");
+                const btn = document.getElementById("btnDesplegableMarcas");
+                if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                    menu.classList.add("hidden");
+                }
+            });
         });
 
         function toggleFiltrosAvanzados() {
@@ -330,6 +369,11 @@
                 panel.classList.add("hidden");
                 icono.style.transform = "rotate(0deg)";
             }
+        }
+
+        function toggleDropdownMarcas() {
+            const menu = document.getElementById("menuDesplegableMarcas");
+            menu.classList.toggle("hidden");
         }
 
         async function cargarIndiceMeses() {
@@ -361,7 +405,6 @@
                     selectHasta.appendChild(opt2);
                 });
 
-                // SELECCIÓN POR DEFECTO: ÚLTIMO AÑO (ÚLTIMOS 12 MESES)
                 if (indexGlobal.length > 0) {
                     const ultimoIdx = indexGlobal.length - 1;
                     const primerIdx = Math.max(0, indexGlobal.length - 12);
@@ -370,6 +413,7 @@
                     selectHasta.selectedIndex = ultimoIdx;
                 }
 
+                await cargarMarcasDisponibles();
                 await cargarYProcesarDatos();
 
             } catch (err) {
@@ -378,11 +422,100 @@
             }
         }
 
+        // CARGA DINÁMICA DE CHECKBOXES DE MARCAS
+        async function cargarMarcasDisponibles() {
+            const mesDesde = document.getElementById("mesDesde").value;
+            const mesHasta = document.getElementById("mesHasta").value;
+
+            if (!mesDesde || !mesHasta || mesDesde > mesHasta) return;
+
+            const mesesAFiltrar = indexGlobal.filter(item => item.periodo >= mesDesde && item.periodo <= mesHasta);
+            try {
+                const promesas = mesesAFiltrar.map(m => fetch(`data_motos/${m.archivo}`).then(r => r.json()));
+                const resultadosJSON = await Promise.all(promesas);
+
+                const setMarcas = new Set();
+                resultadosJSON.forEach(dataMes => {
+                    dataMes.registros.forEach(r => {
+                        if (r.mar) setMarcas.add(r.mar.toUpperCase());
+                    });
+                });
+
+                todasLasMarcasLista = Array.from(setMarcas).sort();
+                renderizarListaCheckboxes(todasLasMarcasLista);
+
+            } catch (e) {
+                console.error("Error al cargar lista de marcas:", e);
+            }
+        }
+
+        function renderizarListaCheckboxes(marcas) {
+            const contenedor = document.getElementById("listaCheckboxMarcas");
+            contenedor.innerHTML = "";
+
+            marcas.forEach(marca => {
+                const estaSeleccionada = marcasSeleccionadasSet.has(marca);
+                const label = document.createElement("label");
+                label.className = "flex items-center gap-2 p-1 hover:bg-slate-800 rounded cursor-pointer select-none";
+
+                label.innerHTML = `
+                    <input type="checkbox" value="${marca}" ${estaSeleccionada ? 'checked' : ''} onchange="toggleMarcaSeleccionada('${marca}')" class="w-3.5 h-3.5 text-blue-600 rounded bg-slate-900 border-slate-700 focus:ring-blue-500">
+                    <span class="truncate">${marca}</span>
+                `;
+                contenedor.appendChild(label);
+            });
+        }
+
+        function filtrarListaMarcasCheck() {
+            const texto = document.getElementById("buscarMarcaCheck").value.toUpperCase();
+            const filtradas = todasLasMarcasLista.filter(m => m.includes(texto));
+            renderizarListaCheckboxes(filtradas);
+        }
+
+        function toggleMarcaSeleccionada(marca) {
+            if (marcasSeleccionadasSet.has(marca)) {
+                marcasSeleccionadasSet.delete(marca);
+            } else {
+                marcasSeleccionadasSet.add(marca);
+            }
+            actualizarUIChipsYBotonMarcas();
+        }
+
+        function quitarMarcaChip(marca) {
+            marcasSeleccionadasSet.delete(marca);
+            renderizarListaCheckboxes(todasLasMarcasLista);
+            actualizarUIChipsYBotonMarcas();
+        }
+
+        function actualizarUIChipsYBotonMarcas() {
+            const btnTxt = document.getElementById("txtBotonMarcas");
+            const contenedorChips = document.getElementById("contenedorChipsMarcas");
+            contenedorChips.innerHTML = "";
+
+            if (marcasSeleccionadasSet.size === 0) {
+                btnTxt.textContent = "Todas las marcas";
+            } else if (marcasSeleccionadasSet.size === 1) {
+                btnTxt.textContent = Array.from(marcasSeleccionadasSet)[0];
+            } else {
+                btnTxt.textContent = `${marcasSeleccionadasSet.size} marcas seleccionadas`;
+            }
+
+            // Renderizado de etiquetas (Chips con X)
+            marcasSeleccionadasSet.forEach(marca => {
+                const chip = document.createElement("span");
+                chip.className = "inline-flex items-center gap-1 bg-slate-800 border border-slate-700 text-blue-400 font-semibold text-[11px] px-2 py-0.5 rounded-full shadow-sm";
+                chip.innerHTML = `
+                    <span>${marca}</span>
+                    <button type="button" onclick="quitarMarcaChip('${marca}')" class="text-slate-400 hover:text-red-400 font-bold ml-0.5 focus:outline-none">&times;</button>
+                `;
+                contenedorChips.appendChild(chip);
+            });
+        }
+
         async function cargarYProcesarDatos() {
             const mesDesde = document.getElementById("mesDesde").value;
             const mesHasta = document.getElementById("mesHasta").value;
 
-            const fMarca = document.getElementById("filtroMarca").value.trim().toUpperCase();
             const cilMin = parseInt(document.getElementById("cilMin").value) || 0;
             const cilMax = parseInt(document.getElementById("cilMax").value) || 999999;
             const fEstado = document.getElementById("filtroEstado").value;
@@ -414,7 +547,12 @@
 
                     dataMes.registros.forEach(reg => {
                         if (reg.cil < cilMin || reg.cil > cilMax) return;
-                        if (fMarca && !reg.mar.includes(fMarca)) return;
+                        
+                        // Filtro de Marcas
+                        if (marcasSeleccionadasSet.size > 0 && !marcasSeleccionadasSet.has(reg.mar.toUpperCase())) {
+                            return;
+                        }
+
                         if (fEstado !== "TODOS" && reg.est !== fEstado) return;
 
                         if (fProp === "GASOLINA" && reg.pro !== "GASOLINA") return;
