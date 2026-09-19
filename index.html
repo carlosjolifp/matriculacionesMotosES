@@ -185,7 +185,7 @@
             <section class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-4 sm:p-5 shadow-lg">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                     <div>
-                        <h2 class="text-base sm:text-lg font-bold text-white">Evolución  Cuota de Mercado (%) - Top 10 </h2>
+                        <h2 class="text-base sm:text-lg font-bold text-white">Evolución Cuota de Mercado (%) - Top 10</h2>
                         <p class="text-xs text-slate-400">Porcentaje mensual sobre el total de matriculaciones</p>
                     </div>
                 </div>
@@ -219,7 +219,7 @@
                 </div>
             </section>
 
-            <!-- TABLA DE RESULTADOS CON PAGINACIÓN -->
+            <!-- TABLA DE RESULTADOS CON PAGINACIÓN Y ORDENAMIENTO POR CABECERAS -->
             <section class="bg-slate-800/60 border border-slate-700/60 rounded-xl overflow-hidden shadow-lg">
                 <div class="p-4 sm:p-5 border-b border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
@@ -247,12 +247,20 @@
 
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs sm:text-sm text-slate-300">
-                        <thead class="bg-slate-900/80 text-slate-400 uppercase text-[11px] tracking-wider font-semibold border-b border-slate-700/60">
+                        <thead class="bg-slate-900/80 text-slate-400 uppercase text-[11px] tracking-wider font-semibold border-b border-slate-700/60 select-none">
                             <tr>
-                                <th class="py-3 px-4">#</th>
-                                <th id="thNombreColumna" class="py-3 px-4">Marca</th>
-                                <th class="py-3 px-4 text-right">Unidades</th>
-                                <th class="py-3 px-4 text-right">Cuota %</th>
+                                <th onclick="ordenarTablaPor('posicion')" class="py-3 px-4 cursor-pointer hover:text-white transition">
+                                    # <span id="sort_posicion" class="ml-0.5 text-[10px]"></span>
+                                </th>
+                                <th id="thNombreColumna" onclick="ordenarTablaPor('nombre')" class="py-3 px-4 cursor-pointer hover:text-white transition">
+                                    Marca <span id="sort_nombre" class="ml-0.5 text-[10px]"></span>
+                                </th>
+                                <th onclick="ordenarTablaPor('unidades')" class="py-3 px-4 text-right cursor-pointer hover:text-white transition">
+                                    Unidades <span id="sort_unidades" class="ml-0.5 text-[10px]">▼</span>
+                                </th>
+                                <th onclick="ordenarTablaPor('cuota')" class="py-3 px-4 text-right cursor-pointer hover:text-white transition">
+                                    Cuota % <span id="sort_cuota" class="ml-0.5 text-[10px]"></span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="tbodyResultados" class="divide-y divide-slate-700/40">
@@ -326,6 +334,10 @@
         let listaTablaFiltrada = [];
         let modoAgrupacionActual = 'MARCA';
         
+        // VARIABLES DE ORDENAMIENTO
+        let columnaOrdenActual = 'unidades';
+        let ordenAscendente = false;
+
         let marcasSeleccionadasSet = new Set();
         let todasLasMarcasLista = [];
 
@@ -341,15 +353,137 @@
             "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
         ];
 
-        const COLORES_MARCAS = [
-            '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
-            '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#64748b'
+        const COLORES_MARCAS_FIJOS = {
+            'HONDA': '#ef4444',
+            'YAMAHA': '#06b6d4',
+            'KAWASAKI': '#22c55e',
+            'SUZUKI': '#eab308'
+        };
+
+        const PALETA_SECUNDARIA = [
+            '#8b5cf6', '#ec4899', '#f97316', '#10b981', '#3b82f6', '#64748b'
         ];
+
+        // DICCIONARIO COMPLETO DE HOMOLOGACIONES DGT A NOMBRES COMERCIALES
+        const DICCIONARIO_MODELOS = {
+            // HONDA
+            "WW125": "PCX 125", "WW 125": "PCX 125", "PCX125": "PCX 125", "JK05": "PCX 125",
+            "SH125": "Scoopy SH125i", "SH125AD": "Scoopy SH125i", "SH 125": "Scoopy SH125i", "JF90": "Scoopy SH125i",
+            "ADV350": "ADV 350", "ADV 350": "ADV 350", "NF13": "ADV 350",
+            "NSS125": "Forza 125", "NSS 125": "Forza 125", "JK02": "Forza 125",
+            "NSS350": "Forza 350", "NSS 350": "Forza 350", "NF10": "Forza 350",
+            "NSS750": "Forza 750", "RH11": "Forza 750",
+            "CB125R": "CB125R", "CBF125": "CB125F",
+            "CB500X": "CB500X", "PC64": "CB500X", "NX500": "NX500", "PC70": "NX500",
+            "CB750": "CB750 Hornet", "CB 750": "CB750 Hornet", "RH12": "CB750 Hornet",
+            "XL750": "XL750 Transalp", "RD16": "XL750 Transalp",
+            "CRF1100": "CRF1100L Africa Twin", "SD08": "CRF1100L Africa Twin", "SD09": "CRF1100L Africa Twin",
+            "X-ADV": "X-ADV 750", "XADV": "X-ADV 750", "RC95": "X-ADV 750", "RH10": "X-ADV 750",
+            "CMX500": "Rebel 500",
+
+            // YAMAHA
+            "GPD125": "NMAX 125", "GPD 125": "NMAX 125", "SEC7": "NMAX 125", "SE86": "NMAX 125",
+            "MWD125": "Tricity 125",
+            "CZD300": "XMAX 300", "CZD 300": "XMAX 300", "SH14": "XMAX 300",
+            "SH08": "XMAX 125", "SEE1": "XMAX 125",
+            "XP500": "TMAX 560", "XP560": "TMAX 560", "SJ18": "TMAX 560",
+            "MT07": "MT-07", "MT 07": "MT-07", "RM17": "MT-07", "RM33": "MT-07", "RM40": "MT-07",
+            "MT09": "MT-09", "MT 09": "MT-09", "RN69": "MT-09", "RN87": "MT-09",
+            "MT125": "MT-125", "RE40": "MT-125",
+            "XTZ690": "Ténéré 700", "TENERE 700": "Ténéré 700", "DM07": "Ténéré 700", "DM11": "Ténéré 700",
+            "TRACER 9": "Tracer 9", "MTT890": "Tracer 9", "RN70": "Tracer 9",
+            "TRACER 7": "Tracer 7", "MTT690": "Tracer 7",
+
+            // KAWASAKI
+            "Z900": "Z900", "Z 900": "Z900", "ZR900B": "Z900", "ZR900F": "Z900", "ZR900H": "Z900 (A2)",
+            "Z650": "Z650", "ER650H": "Z650", "Z125": "Z125", "BR125K": "Z125",
+            "KLE650": "Versys 650", "VERSYS 650": "Versys 650",
+            "EX400": "Ninja 400", "EX500": "Ninja 500",
+
+            // SUZUKI
+            "UH125": "Burgman 125", "UH 125": "Burgman 125", "AM121": "Burgman Street 125EX",
+            "DL650": "V-Strom 650", "DL 650": "V-Strom 650", "DL800": "V-Strom 800",
+            "GSX-8S": "GSX-8S", "GSX8S": "GSX-8S", "GSX-S1000GT": "GSX-S1000GT",
+
+            // KYMCO
+            "AGILITY CITY 125": "Agility City 125", "AGILITY 125": "Agility City 125", "C10000": "Agility City 125",
+            "C11000": "Agility S 125", "DTX 125": "DTX 125", "DTX 350": "DTX 350", "SK25": "DTX 125",
+            "SUPER DINK 125": "Super Dink 125", "V20000": "Super Dink 125",
+            "XCITING 400": "Xciting VS 400", "AK550": "AK 550 Premium", "AK 550": "AK 550 Premium",
+
+            // SYM
+            "SYMPHONY 125": "Symphony 125", "SYMPHONY ST": "Symphony ST 125", "SYMPHONY SR": "Symphony SR 125", "LX12W": "Symphony 125",
+            "JET 14 125": "Jet 14 125", "JET 14": "Jet 14 125",
+            "XCITY 125": "Cruisym Alpha 125", "CRUISYM 125": "Cruisym Alpha 125",
+            "MAXSYM TL": "Maxsym TL 508", "MAXSYM 508": "Maxsym TL 508",
+
+            // BMW
+            "R1250GS": "R 1250 GS", "R 1250 GS": "R 1250 GS", "1G13": "R 1250 GS",
+            "R1300GS": "R 1300 GS", "R 1300 GS": "R 1300 GS", "GG13": "R 1300 GS",
+            "F850GS": "F 850 GS", "F900XR": "F 900 XR", "F900R": "F 900 R",
+            "CE04": "CE 04", "CE 04": "CE 04", "C400X": "C 400 X", "C400GT": "C 400 GT",
+
+            // VOGE
+            "900DSX": "900DSX", "900 DSX": "900DSX", "525DSX": "525DSX", "525 DSX": "525DSX",
+            "SR4 MAX": "SR4 Max", "SR1": "SR1 125", "SR1 125": "SR1 125", "500DS": "500DS",
+
+            // ZONTES
+            "E350": "E350", "E 350": "E350", "D350": "D350", "M350": "M350",
+            "M125": "M125", "D125": "D125", "350T": "350-T", "310T": "310-T",
+
+            // PIAGGIO / VESPA / APRILIA
+            "MEDLEY 125": "Medley 125", "MEDLEY": "Medley 125", "MA02": "Medley 125",
+            "LIBERTY 125": "Liberty 125", "LIBERTY": "Liberty 125",
+            "MP3 300": "MP3 300", "MP3 500": "MP3 500",
+            "VESPA PRIMAVERA": "Vespa Primavera 125", "VESPA GTS": "Vespa GTS 300",
+            "SR GT 125": "SR GT 125", "SR GT 200": "SR GT 200", "RS660": "RS 660", "RS 660": "RS 660",
+
+            // KEEWAY / MACBOR / BENELLI
+            "VIACRUCS 125": "Vieste 125", "VIESTE 125": "Vieste 125",
+            "TRK502": "TRK 502 X", "TRK 502": "TRK 502 X", "TRK702": "TRK 702", "TRK 702": "TRK 702 / 702X",
+            "MONTANA XR5": "Montana XR5 500", "EIGHT MILE": "Eight Mile 500"
+        };
+
+        function obtenerNombreComercial(marca, modeloCrudo) {
+            if (!modeloCrudo) return marca;
+            
+            const textoLimpio = modeloCrudo.trim().toUpperCase();
+
+            // 1. Coincidencia exacta
+            if (DICCIONARIO_MODELOS[textoLimpio]) {
+                return `${marca} ${DICCIONARIO_MODELOS[textoLimpio]}`;
+            }
+
+            // 2. Búsqueda por subcadena / palabras clave
+            for (const [clave, valor] of Object.entries(DICCIONARIO_MODELOS)) {
+                if (textoLimpio.includes(clave)) {
+                    return `${marca} ${valor}`;
+                }
+            }
+
+            // 3. Nombre crudo limpio si no coincide
+            const modeloOriginalLimpio = modeloCrudo.replace(/\s+/g, ' ').trim();
+            return `${marca} ${modeloOriginalLimpio}`;
+        }
+
+        function obtenerColorMarca(nombreMarca) {
+            const marcaUpper = (nombreMarca || '').toUpperCase();
+            for (let m in COLORES_MARCAS_FIJOS) {
+                if (marcaUpper.includes(m)) {
+                    return COLORES_MARCAS_FIJOS[m];
+                }
+            }
+            let hash = 0;
+            for (let i = 0; i < marcaUpper.length; i++) {
+                hash = marcaUpper.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            const idx = Math.abs(hash) % PALETA_SECUNDARIA.length;
+            return PALETA_SECUNDARIA[idx];
+        }
 
         document.addEventListener("DOMContentLoaded", async () => {
             await cargarIndiceMeses();
 
-            // Cerrar el menú desplegable al hacer clic fuera
             document.addEventListener("click", (e) => {
                 const menu = document.getElementById("menuDesplegableMarcas");
                 const btn = document.getElementById("btnDesplegableMarcas");
@@ -422,7 +556,6 @@
             }
         }
 
-        // CARGA DINÁMICA DE CHECKBOXES DE MARCAS
         async function cargarMarcasDisponibles() {
             const mesDesde = document.getElementById("mesDesde").value;
             const mesHasta = document.getElementById("mesHasta").value;
@@ -500,7 +633,6 @@
                 btnTxt.textContent = `${marcasSeleccionadasSet.size} marcas seleccionadas`;
             }
 
-            // Renderizado de etiquetas (Chips con X)
             marcasSeleccionadasSet.forEach(marca => {
                 const chip = document.createElement("span");
                 chip.className = "inline-flex items-center gap-1 bg-slate-800 border border-slate-700 text-blue-400 font-semibold text-[11px] px-2 py-0.5 rounded-full shadow-sm";
@@ -548,7 +680,6 @@
                     dataMes.registros.forEach(reg => {
                         if (reg.cil < cilMin || reg.cil > cilMax) return;
                         
-                        // Filtro de Marcas
                         if (marcasSeleccionadasSet.size > 0 && !marcasSeleccionadasSet.has(reg.mar.toUpperCase())) {
                             return;
                         }
@@ -593,7 +724,9 @@
 
             datosAcumulados.forEach(r => {
                 const m = r.mar || "DESCONOCIDA";
-                const mod = `${r.mar} ${r.mod}`;
+                
+                // Mapeo dinámico a Nombre Comercial
+                const mod = obtenerNombreComercial(m, r.mod);
 
                 conteoMarcas[m] = (conteoMarcas[m] || 0) + 1;
                 conteoModelos[mod] = (conteoModelos[mod] || 0) + 1;
@@ -603,20 +736,26 @@
             });
 
             resumenMarcasGlobal = Object.keys(conteoMarcas)
-                .map(m => ({
+                .map((m) => ({
+                    posicionOriginal: 0,
                     nombre: m,
                     unidades: conteoMarcas[m],
                     cuota: (conteoMarcas[m] / total) * 100
                 }))
                 .sort((a, b) => b.unidades - a.unidades);
 
+            resumenMarcasGlobal.forEach((item, idx) => item.posicionOriginal = idx + 1);
+
             resumenModelosGlobal = Object.keys(conteoModelos)
-                .map(m => ({
+                .map((m) => ({
+                    posicionOriginal: 0,
                     nombre: m,
                     unidades: conteoModelos[m],
                     cuota: (conteoModelos[m] / total) * 100
                 }))
                 .sort((a, b) => b.unidades - a.unidades);
+
+            resumenModelosGlobal.forEach((item, idx) => item.posicionOriginal = idx + 1);
 
             const top1 = resumenMarcasGlobal[0];
             document.getElementById("kpiMarcaTop").textContent = top1 ? top1.nombre : "-";
@@ -644,26 +783,80 @@
             if (tipo === "MARCA") {
                 btnMarca.className = "flex-1 sm:flex-none text-xs font-semibold px-3 py-1.5 rounded-md transition shadow-sm bg-blue-600 text-white";
                 btnModelo.className = "flex-1 sm:flex-none text-xs font-semibold px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white";
-                thColumna.textContent = "Marca";
+                thColumna.innerHTML = `Marca <span id="sort_nombre" class="ml-0.5 text-[10px]"></span>`;
                 listaTablaActual = resumenMarcasGlobal;
             } else {
                 btnModelo.className = "flex-1 sm:flex-none text-xs font-semibold px-3 py-1.5 rounded-md transition shadow-sm bg-blue-600 text-white";
                 btnMarca.className = "flex-1 sm:flex-none text-xs font-semibold px-3 py-1.5 rounded-md transition text-slate-400 hover:text-white";
-                thColumna.textContent = "Modelo";
+                thColumna.innerHTML = `Modelo <span id="sort_nombre" class="ml-0.5 text-[10px]"></span>`;
                 listaTablaActual = resumenModelosGlobal;
             }
 
             document.getElementById("filtroTabla").value = "";
-            listaTablaFiltrada = [...listaTablaActual];
-            paginaActual = 1;
-            renderizarTablaPaginada();
+            columnaOrdenActual = 'unidades';
+            ordenAscendente = false;
+            
+            filtrarYOrdenarTabla();
+        }
+
+        function ordenarTablaPor(columna) {
+            if (columnaOrdenActual === columna) {
+                ordenAscendente = !ordenAscendente;
+            } else {
+                columnaOrdenActual = columna;
+                ordenAscendente = (columna === 'nombre' || columna === 'posicion');
+            }
+            filtrarYOrdenarTabla();
         }
 
         function filtrarTabla() {
+            filtrarYOrdenarTabla();
+        }
+
+        function filtrarYOrdenarTabla() {
             const texto = document.getElementById("filtroTabla").value.toUpperCase();
-            listaTablaFiltrada = listaTablaActual.filter(item => item.nombre.includes(texto));
+            
+            let resultado = listaTablaActual.filter(item => item.nombre.includes(texto));
+
+            resultado.sort((a, b) => {
+                let valA, valB;
+                if (columnaOrdenActual === 'posicion') {
+                    valA = a.posicionOriginal;
+                    valB = b.posicionOriginal;
+                } else if (columnaOrdenActual === 'nombre') {
+                    valA = a.nombre;
+                    valB = b.nombre;
+                } else if (columnaOrdenActual === 'cuota') {
+                    valA = a.cuota;
+                    valB = b.cuota;
+                } else {
+                    valA = a.unidades;
+                    valB = b.unidades;
+                }
+
+                if (valA < valB) return ordenAscendente ? -1 : 1;
+                if (valA > valB) return ordenAscendente ? 1 : -1;
+                return 0;
+            });
+
+            listaTablaFiltrada = resultado;
             paginaActual = 1;
+            actualizarIconosOrden();
             renderizarTablaPaginada();
+        }
+
+        function actualizarIconosOrden() {
+            const columnas = ['posicion', 'nombre', 'unidades', 'cuota'];
+            columnas.forEach(col => {
+                const el = document.getElementById(`sort_${col}`);
+                if (el) {
+                    if (columnaOrdenActual === col) {
+                        el.textContent = ordenAscendente ? '▲' : '▼';
+                    } else {
+                        el.textContent = '';
+                    }
+                }
+            });
         }
 
         function renderizarTablaPaginada() {
@@ -680,13 +873,12 @@
             const tbody = document.getElementById("tbodyResultados");
             tbody.innerHTML = "";
 
-            registrosPagina.forEach((item, idx) => {
-                const posicionReal = inicio + idx + 1;
+            registrosPagina.forEach((item) => {
                 const tr = document.createElement("tr");
                 tr.className = "hover:bg-slate-800/40 transition";
 
                 tr.innerHTML = `
-                    <td class="py-3 px-4 text-slate-500 font-mono text-xs">${posicionReal}</td>
+                    <td class="py-3 px-4 text-slate-500 font-mono text-xs">${item.posicionOriginal}</td>
                     <td class="py-3 px-4 font-semibold text-white">${item.nombre}</td>
                     <td class="py-3 px-4 text-right font-medium">${item.unidades.toLocaleString("es-ES")}</td>
                     <td class="py-3 px-4 text-right text-blue-400 font-semibold">${item.cuota.toFixed(2)}%</td>
@@ -717,141 +909,144 @@
         }
 
         function renderizarTopListasYGraficosMovil() {
-    const contMarcas = document.getElementById("topMarcasLista");
-    contMarcas.innerHTML = "";
-    resumenMarcasGlobal.slice(0, 10).forEach((item, i) => {
-        contMarcas.innerHTML += `
-            <div class="flex items-center justify-between text-xs p-2 rounded bg-slate-900/60 border border-slate-800">
-                <div class="flex items-center gap-2 truncate">
-                    <span class="font-mono text-slate-500 w-4">${i + 1}.</span>
-                    <span class="font-semibold text-slate-200 truncate">${item.nombre}</span>
-                </div>
-                <div class="text-right">
-                    <span class="font-bold text-amber-400">${item.unidades.toLocaleString("es-ES")}</span>
-                    <span class="text-slate-500 text-[10px] ml-1">(${item.cuota.toFixed(1)}%)</span>
-                </div>
-            </div>`;
-    });
+            // LISTA TEXTUAL DE TOP MARCAS
+            const contMarcas = document.getElementById("topMarcasLista");
+            contMarcas.innerHTML = "";
+            resumenMarcasGlobal.slice(0, 10).forEach((item, i) => {
+                const colorTexto = obtenerColorMarca(item.nombre);
+                contMarcas.innerHTML += `
+                    <div class="flex items-center justify-between text-xs p-2 rounded bg-slate-900/60 border border-slate-800">
+                        <div class="flex items-center gap-2 truncate">
+                            <span class="font-mono text-slate-500 w-4">${i + 1}.</span>
+                            <span class="font-semibold text-slate-200 truncate">${item.nombre}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-bold" style="color: ${colorTexto}">${item.unidades.toLocaleString("es-ES")}</span>
+                            <span class="text-slate-500 text-[10px] ml-1">(${item.cuota.toFixed(1)}%)</span>
+                        </div>
+                    </div>`;
+            });
 
-    const contModelos = document.getElementById("topModelosLista");
-    contModelos.innerHTML = "";
-    resumenModelosGlobal.slice(0, 10).forEach((item, i) => {
-        contModelos.innerHTML += `
-            <div class="flex items-center justify-between text-xs p-2 rounded bg-slate-900/60 border border-slate-800">
-                <div class="flex items-center gap-2 truncate">
-                    <span class="font-mono text-slate-500 w-4">${i + 1}.</span>
-                    <span class="font-semibold text-slate-200 truncate">${item.nombre}</span>
-                </div>
-                <div class="text-right">
-                    <span class="font-bold text-emerald-400">${item.unidades.toLocaleString("es-ES")}</span>
-                    <span class="text-slate-500 text-[10px] ml-1">(${item.cuota.toFixed(1)}%)</span>
-                </div>
-            </div>`;
-    });
+            // LISTA TEXTUAL DE TOP MODELOS
+            const contModelos = document.getElementById("topModelosLista");
+            contModelos.innerHTML = "";
+            resumenModelosGlobal.slice(0, 10).forEach((item, i) => {
+                const colorTexto = obtenerColorMarca(item.nombre);
+                contModelos.innerHTML += `
+                    <div class="flex items-center justify-between text-xs p-2 rounded bg-slate-900/60 border border-slate-800">
+                        <div class="flex items-center gap-2 truncate">
+                            <span class="font-mono text-slate-500 w-4">${i + 1}.</span>
+                            <span class="font-semibold text-slate-200 truncate">${item.nombre}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-bold" style="color: ${colorTexto}">${item.unidades.toLocaleString("es-ES")}</span>
+                            <span class="text-slate-500 text-[10px] ml-1">(${item.cuota.toFixed(1)}%)</span>
+                        </div>
+                    </div>`;
+            });
 
-    const top5Marcas = resumenMarcasGlobal.slice(0, 5);
-    const top5Modelos = resumenModelosGlobal.slice(0, 5);
+            const top5Marcas = resumenMarcasGlobal.slice(0, 5);
+            const top5Modelos = resumenModelosGlobal.slice(0, 5);
 
-    // GRÁFICO TOP MARCAS (VERTICAL CON GRADIENTE NARANJA/AMARILLO)
-    const canvasMarcas = document.getElementById("chartTopMarcasMovil");
-    const ctxMarcas = canvasMarcas.getContext("2d");
+            // 1. GRÁFICO TOP MARCAS (DEGRADADO AMARILLO / NARANJA NEÓN)
+            const canvasMarcas = document.getElementById("chartTopMarcasMovil");
+            const ctxMarcas = canvasMarcas.getContext("2d");
 
-    // Creación del degradado vertical (de arriba a abajo)
-    const gradientNaranjaAmarillo = ctxMarcas.createLinearGradient(0, 0, 0, 200);
-    gradientNaranjaAmarillo.addColorStop(0, '#f59e0b'); // Amarillo / Ámbar (Arriba)
-    gradientNaranjaAmarillo.addColorStop(1, '#ea580c'); // Naranja Intenso (Abajo)
+            const gradientNaranjaAmarillo = ctxMarcas.createLinearGradient(0, 0, 0, 200);
+            gradientNaranjaAmarillo.addColorStop(0, '#f59e0b'); // Amarillo / Ámbar (Arriba)
+            gradientNaranjaAmarillo.addColorStop(1, '#ea580c'); // Naranja Intenso (Abajo)
 
-    if (chartMarcasMovil) chartMarcasMovil.destroy();
-    chartMarcasMovil = new Chart(ctxMarcas, {
-        type: 'bar',
-        data: {
-            labels: top5Marcas.map(x => x.nombre),
-            datasets: [{
-                data: top5Marcas.map(x => x.unidades),
-                backgroundColor: gradientNaranjaAmarillo,
-                borderColor: '#fbbf24',
-                borderWidth: 1,
-                borderRadius: 6
-            }]
-        },
-        options: {
-            indexAxis: 'x', // Orientación VERTICAL
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { 
-                legend: { display: false },
-                tooltip: { callbacks: { label: ctx => ` Unidades: ${ctx.raw.toLocaleString("es-ES")}` } }
-            },
-            scales: {
-                x: { 
-                    display: true, 
-                    grid: { display: false }, 
-                    ticks: { color: '#cbd5e1', font: { size: 10, weight: '600' } } 
+            if (chartMarcasMovil) chartMarcasMovil.destroy();
+            chartMarcasMovil = new Chart(ctxMarcas, {
+                type: 'bar',
+                data: {
+                    labels: top5Marcas.map(x => x.nombre),
+                    datasets: [{
+                        data: top5Marcas.map(x => x.unidades),
+                        backgroundColor: gradientNaranjaAmarillo,
+                        borderColor: '#fbbf24',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
                 },
-                y: { 
-                    display: true,
-                    grid: { color: 'rgba(51, 65, 85, 0.3)' },
-                    ticks: { 
-                        color: '#94a3b8', 
-                        font: { size: 9 },
-                        callback: val => val >= 1000 ? (val/1000).toFixed(0) + 'k' : val
-                    } 
+                options: {
+                    indexAxis: 'x',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: ctx => ` Unidades: ${ctx.raw.toLocaleString("es-ES")}` } }
+                    },
+                    scales: {
+                        x: { 
+                            display: true, 
+                            grid: { display: false }, 
+                            ticks: { color: '#cbd5e1', font: { size: 10, weight: '600' } } 
+                        },
+                        y: { 
+                            display: true,
+                            grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                            ticks: { 
+                                color: '#94a3b8', 
+                                font: { size: 9 },
+                                callback: val => val >= 1000 ? (val/1000).toFixed(0) + 'k' : val
+                            } 
+                        }
+                    }
                 }
-            }
-        }
-    });
+            });
 
- // GRÁFICO TOP MODELOS (CON GRADIENTE VERDE Y BORDE)
-    const canvasModelos = document.getElementById("chartTopModelosMovil");
-    const ctxModelos = canvasModelos.getContext("2d");
+            // 2. GRÁFICO TOP MODELOS (DEGRADADO VERDE ESMERALDA / VERDE NEÓN)
+            const canvasModelos = document.getElementById("chartTopModelosMovil");
+            const ctxModelos = canvasModelos.getContext("2d");
 
-    // Creación del degradado horizontal (de izquierda a derecha para barras 'y')
-    const gradientVerde = ctxModelos.createLinearGradient(0, 0, 300, 0);
-    gradientVerde.addColorStop(0, '#059669'); // Verde Esmeralda (Base)
-    gradientVerde.addColorStop(1, '#34d399'); // Verde Neón (Extremo)
+            const gradientVerde = ctxModelos.createLinearGradient(0, 0, 300, 0);
+            gradientVerde.addColorStop(0, '#059669'); // Verde Esmeralda (Izquierda)
+            gradientVerde.addColorStop(1, '#34d399'); // Verde Neón (Derecha)
 
-    if (chartModelosMovil) chartModelosMovil.destroy();
-    chartModelosMovil = new Chart(ctxModelos, {
-        type: 'bar',
-        data: {
-            labels: top5Modelos.map(x => x.nombre),
-            datasets: [{
-                data: top5Modelos.map(x => x.unidades),
-                backgroundColor: gradientVerde,
-                borderColor: '#6ee7b7',
-                borderWidth: 1,
-                borderRadius: 4
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { 
-                legend: { display: false },
-                tooltip: { callbacks: { label: ctx => ` Unidades: ${ctx.raw.toLocaleString("es-ES")}` } }
-            },
-            scales: {
-                x: { 
-                    display: true,
-                    grid: { color: 'rgba(51, 65, 85, 0.3)' },
-                    ticks: { 
-                        color: '#94a3b8', 
-                        font: { size: 9 },
-                        callback: val => val >= 1000 ? (val/1000).toFixed(0) + 'k' : val
-                    } 
+            if (chartModelosMovil) chartModelosMovil.destroy();
+            chartModelosMovil = new Chart(ctxModelos, {
+                type: 'bar',
+                data: {
+                    labels: top5Modelos.map(x => x.nombre),
+                    datasets: [{
+                        data: top5Modelos.map(x => x.unidades),
+                        backgroundColor: gradientVerde,
+                        borderColor: '#6ee7b7',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
                 },
-                y: { display: true, grid: { display: false }, ticks: { color: '#cbd5e1', font: { size: 10, weight: '600' } } }
-            }
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: ctx => ` Unidades: ${ctx.raw.toLocaleString("es-ES")}` } }
+                    },
+                    scales: {
+                        x: { 
+                            display: true,
+                            grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                            ticks: { 
+                                color: '#94a3b8', 
+                                font: { size: 9 },
+                                callback: val => val >= 1000 ? (val/1000).toFixed(0) + 'k' : val
+                            } 
+                        },
+                        y: { display: true, grid: { display: false }, ticks: { color: '#cbd5e1', font: { size: 10, weight: '600' } } }
+                    }
+                }
+            });
         }
-    });
-}
 
         function renderizarGraficoEvolucion(evolucionMensual, top10Marcas) {
             const ctx = document.getElementById("chartCuotas").getContext("2d");
             const periodos = Object.keys(evolucionMensual).sort();
 
-            const datasets = top10Marcas.map((marca, idx) => {
+            const datasets = top10Marcas.map((marca) => {
+                const colorMarca = obtenerColorMarca(marca);
                 const dataCuotas = periodos.map(periodo => {
                     const mesObj = evolucionMensual[periodo];
                     if (!mesObj || mesObj.total === 0) return 0;
@@ -862,8 +1057,8 @@
                 return {
                     label: marca,
                     data: dataCuotas,
-                    borderColor: COLORES_MARCAS[idx % COLORES_MARCAS.length],
-                    backgroundColor: COLORES_MARCAS[idx % COLORES_MARCAS.length],
+                    borderColor: colorMarca,
+                    backgroundColor: colorMarca,
                     tension: 0.3,
                     borderWidth: 2,
                     pointRadius: 2,
