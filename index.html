@@ -29,9 +29,8 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800 pb-4">
                 <div>
                     <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-2">
-                        <span>🏍️</span> Matriculaciones de Motocicletas
+                        <span>🏍️</span> Matriculaciones DGT
                     </h1>
-                    <p class="text-xs sm:text-sm text-slate-400 mt-1">Análisis histórico interactivo de datos oficiales de la DGT</p>
                 </div>
             </div>
         </header>
@@ -69,7 +68,7 @@
                 </button>
             </div>
 
-            <!-- FILTROS AVANZADOS (OCULTOS EN MÓVIL POR DEFECTO / SIEMPRE VISIBLES EN TABLET Y PC) -->
+            <!-- FILTROS AVANZADOS -->
             <div id="panelFiltrosAvanzados" class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 pt-3 border-t border-slate-700/50 sm:border-0 sm:pt-0">
                 
                 <!-- Filtro Marca -->
@@ -121,7 +120,7 @@
         <!-- CONTENIDO PRINCIPAL -->
         <div id="contenidoAnalisis" class="space-y-6">
 
-            <!-- BLOQUE DE KPIS PRINCIPALES (SEGUNDARIOS OCULTOS EN MÓVIL) -->
+            <!-- BLOQUE DE KPIS PRINCIPALES -->
             <section class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 col-span-1">
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Matriculaciones</p>
@@ -169,7 +168,7 @@
                         <span>🏆</span> Top Marcas
                     </h3>
                     <div id="topMarcasLista" class="hidden sm:block space-y-2"></div>
-                    <div class="block sm:hidden relative h-52 w-full">
+                    <div class="block sm:hidden relative h-60 w-full">
                         <canvas id="chartTopMarcasMovil"></canvas>
                     </div>
                 </div>
@@ -180,13 +179,13 @@
                         <span>🥇</span> Top Modelos
                     </h3>
                     <div id="topModelosLista" class="hidden sm:block space-y-2"></div>
-                    <div class="block sm:hidden relative h-52 w-full">
+                    <div class="block sm:hidden relative h-60 w-full">
                         <canvas id="chartTopModelosMovil"></canvas>
                     </div>
                 </div>
             </section>
 
-            <!-- TABLA DE RESULTADOS CON BOTONES DE AGRUPACIÓN (MARCA / MODELO) -->
+            <!-- TABLA DE RESULTADOS CON PAGINACIÓN -->
             <section class="bg-slate-800/60 border border-slate-700/60 rounded-xl overflow-hidden shadow-lg">
                 <div class="p-4 sm:p-5 border-b border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
@@ -197,7 +196,7 @@
                     </div>
 
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                        <!-- BOTONES INTERACTIVOS DE AGRUPACIÓN (MARCA / MODELO) -->
+                        <!-- BOTONES DE AGRUPACIÓN (MARCA / MODELO) -->
                         <div class="flex items-center bg-slate-900 p-1 rounded-lg border border-slate-700">
                             <button id="btnAgruparMarca" onclick="seleccionarAgrupacion('MARCA')" class="flex-1 sm:flex-none text-xs font-semibold px-3 py-1.5 rounded-md transition shadow-sm bg-blue-600 text-white">
                                 MARCA
@@ -228,20 +227,48 @@
                     </table>
                 </div>
 
-                <!-- PIE DE TABLA: BOTONES DE EXPORTACIÓN -->
-                <div class="p-4 bg-slate-900/60 border-t border-slate-700/60 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <span id="txtInfoTabla" class="text-xs text-slate-400">Mostrando registros...</span>
+                <!-- CONTROLES DE PAGINACIÓN Y EXPORTACIÓN -->
+                <div class="p-4 bg-slate-900/60 border-t border-slate-700/60 flex flex-col md:flex-row items-center justify-between gap-4">
                     
-                    <div class="flex items-center gap-2 w-full sm:w-auto">
-                        <button onclick="exportarCSV()" class="flex-1 sm:flex-initial bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium text-xs px-3.5 py-2 rounded-lg transition flex items-center justify-center gap-1.5">
+                    <!-- Info registros y selector por página -->
+                    <div class="flex flex-wrap items-center justify-between sm:justify-start gap-3 w-full md:w-auto text-xs text-slate-400">
+                        <span id="txtInfoTabla">Mostrando registros...</span>
+                        
+                        <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700 px-2 py-1 rounded">
+                            <label for="selectTamanoPagina" class="text-[11px] text-slate-400">Ver:</label>
+                            <select id="selectTamanoPagina" onchange="cambiarTamanoPagina(this.value)" class="bg-transparent text-white font-semibold outline-none text-xs cursor-pointer">
+                                <option value="10" class="bg-slate-900">10</option>
+                                <option value="25" selected class="bg-slate-900">25</option>
+                                <option value="50" class="bg-slate-900">50</option>
+                                <option value="100" class="bg-slate-900">100</option>
+                                <option value="999999" class="bg-slate-900">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Botones de navegación de página -->
+                    <div id="contenedorPaginacion" class="flex items-center justify-center gap-2 w-full md:w-auto">
+                        <button id="btnPagAnt" onclick="cambiarPagina(-1)" class="bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs px-3 py-1.5 rounded transition">
+                            ◀ Anterior
+                        </button>
+                        <span id="txtPaginaActiva" class="text-xs font-semibold text-blue-400 px-2">Pág. 1 de 1</span>
+                        <button id="btnPagSig" onclick="cambiarPagina(1)" class="bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs px-3 py-1.5 rounded transition">
+                            Siguiente ▶
+                        </button>
+                    </div>
+
+                    <!-- Botones de exportación -->
+                    <div class="flex items-center gap-2 w-full md:w-auto">
+                        <button onclick="exportarCSV()" class="flex-1 md:flex-initial bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium text-xs px-3 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5">
                             <span>📄</span>
                             <span>Exportar CSV</span>
                         </button>
-                        <button onclick="exportarExcel()" class="flex-1 sm:flex-initial bg-emerald-700 hover:bg-emerald-600 text-white font-medium text-xs px-3.5 py-2 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <button onclick="exportarExcel()" class="flex-1 md:flex-initial bg-emerald-700 hover:bg-emerald-600 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5">
                             <span>📊</span>
                             <span>Exportar Excel</span>
                         </button>
                     </div>
+
                 </div>
 
             </section>
@@ -262,7 +289,12 @@
         let resumenMarcasGlobal = [];
         let resumenModelosGlobal = [];
         let listaTablaActual = [];
+        let listaTablaFiltrada = [];
         let modoAgrupacionActual = 'MARCA';
+        
+        let paginaActual = 1;
+        let registrosPorPagina = 25;
+
         let chartEvolucion = null;
         let chartMarcasMovil = null;
         let chartModelosMovil = null;
@@ -276,7 +308,6 @@
             await cargarIndiceMeses();
         });
 
-        // EFECTO ACORDEÓN MÓVIL
         function toggleFiltrosAvanzados() {
             const panel = document.getElementById("panelFiltrosAvanzados");
             const icono = document.getElementById("iconoAcordeon");
@@ -301,7 +332,7 @@
                 selectDesde.innerHTML = "";
                 selectHasta.innerHTML = "";
 
-                indexGlobal.forEach((item, idx) => {
+                indexGlobal.forEach((item) => {
                     const opt1 = document.createElement("option");
                     opt1.value = item.periodo;
                     opt1.textContent = item.periodo;
@@ -314,9 +345,13 @@
                     selectHasta.appendChild(opt2);
                 });
 
+                // SELECCIÓN POR DEFECTO: ÚLTIMO AÑO (ÚLTIMOS 12 MESES)
                 if (indexGlobal.length > 0) {
-                    selectDesde.selectedIndex = 0;
-                    selectHasta.selectedIndex = indexGlobal.length - 1;
+                    const ultimoIdx = indexGlobal.length - 1;
+                    const primerIdx = Math.max(0, indexGlobal.length - 12); // Hace 12 meses
+
+                    selectDesde.selectedIndex = primerIdx;
+                    selectHasta.selectedIndex = ultimoIdx;
                 }
 
                 await cargarYProcesarDatos();
@@ -444,7 +479,6 @@
             renderizarGraficoEvolucion(evolucionMensual, resumenMarcasGlobal.slice(0, 10).map(x => x.nombre));
         }
 
-        // CAMBIO INTERACTIVO DE BOTONES DE AGRUPACIÓN (MARCA / MODELO)
         function seleccionarAgrupacion(tipo) {
             modoAgrupacionActual = tipo;
             const btnMarca = document.getElementById("btnAgruparMarca");
@@ -464,19 +498,39 @@
             }
 
             document.getElementById("filtroTabla").value = "";
-            renderizarTabla(listaTablaActual);
+            listaTablaFiltrada = [...listaTablaActual];
+            paginaActual = 1;
+            renderizarTablaPaginada();
         }
 
-        function renderizarTabla(lista) {
+        function filtrarTabla() {
+            const texto = document.getElementById("filtroTabla").value.toUpperCase();
+            listaTablaFiltrada = listaTablaActual.filter(item => item.nombre.includes(texto));
+            paginaActual = 1;
+            renderizarTablaPaginada();
+        }
+
+        function renderizarTablaPaginada() {
+            const totalRegistros = listaTablaFiltrada.length;
+            const totalPaginas = Math.ceil(totalRegistros / registrosPorPagina) || 1;
+
+            if (paginaActual > totalPaginas) paginaActual = totalPaginas;
+            if (paginaActual < 1) paginaActual = 1;
+
+            const inicio = (paginaActual - 1) * registrosPorPagina;
+            const fin = Math.min(inicio + registrosPorPagina, totalRegistros);
+            const registrosPagina = listaTablaFiltrada.slice(inicio, fin);
+
             const tbody = document.getElementById("tbodyResultados");
             tbody.innerHTML = "";
 
-            lista.forEach((item, index) => {
+            registrosPagina.forEach((item, idx) => {
+                const posicionReal = inicio + idx + 1;
                 const tr = document.createElement("tr");
                 tr.className = "hover:bg-slate-800/40 transition";
 
                 tr.innerHTML = `
-                    <td class="py-3 px-4 text-slate-500 font-mono text-xs">${index + 1}</td>
+                    <td class="py-3 px-4 text-slate-500 font-mono text-xs">${posicionReal}</td>
                     <td class="py-3 px-4 font-semibold text-white">${item.nombre}</td>
                     <td class="py-3 px-4 text-right font-medium">${item.unidades.toLocaleString("es-ES")}</td>
                     <td class="py-3 px-4 text-right text-blue-400 font-semibold">${item.cuota.toFixed(2)}%</td>
@@ -484,17 +538,29 @@
                 tbody.appendChild(tr);
             });
 
-            document.getElementById("txtInfoTabla").textContent = `Mostrando ${lista.length} registros`;
+            if (totalRegistros === 0) {
+                document.getElementById("txtInfoTabla").textContent = "Sin resultados";
+            } else {
+                document.getElementById("txtInfoTabla").textContent = `Mostrando ${inicio + 1}-${fin} de ${totalRegistros} registros`;
+            }
+
+            document.getElementById("txtPaginaActiva").textContent = `Pág. ${paginaActual} de ${totalPaginas}`;
+            document.getElementById("btnPagAnt").disabled = (paginaActual <= 1);
+            document.getElementById("btnPagSig").disabled = (paginaActual >= totalPaginas);
         }
 
-        function filtrarTabla() {
-            const texto = document.getElementById("filtroTabla").value.toUpperCase();
-            const filtradas = listaTablaActual.filter(item => item.nombre.includes(texto));
-            renderizarTabla(filtradas);
+        function cambiarPagina(delta) {
+            paginaActual += delta;
+            renderizarTablaPaginada();
+        }
+
+        function cambiarTamanoPagina(nuevoTamano) {
+            registrosPorPagina = parseInt(nuevoTamano);
+            paginaActual = 1;
+            renderizarTablaPaginada();
         }
 
         function renderizarTopListasYGraficosMovil() {
-            // LISTAS EN ESCRITORIO
             const contMarcas = document.getElementById("topMarcasLista");
             contMarcas.innerHTML = "";
             resumenMarcasGlobal.slice(0, 10).forEach((item, i) => {
@@ -527,7 +593,6 @@
                     </div>`;
             });
 
-            // GRÁFICOS DE BARRAS MÓVIL (TOP 5)
             const top5Marcas = resumenMarcasGlobal.slice(0, 5);
             const top5Modelos = resumenModelosGlobal.slice(0, 5);
 
@@ -547,10 +612,21 @@
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: ctx => ` Unidades: ${ctx.raw.toLocaleString("es-ES")}` } }
+                    },
                     scales: {
-                        x: { display: false },
-                        y: { ticks: { color: '#cbd5e1', font: { size: 10 } }, grid: { display: false } }
+                        x: { 
+                            display: true,
+                            grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                            ticks: { 
+                                color: '#94a3b8', 
+                                font: { size: 9 },
+                                callback: val => val >= 1000 ? (val/1000).toFixed(0) + 'k' : val
+                            } 
+                        },
+                        y: { display: true, grid: { display: false }, ticks: { color: '#cbd5e1', font: { size: 10, weight: '600' } } }
                     }
                 }
             });
@@ -571,10 +647,21 @@
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: ctx => ` Unidades: ${ctx.raw.toLocaleString("es-ES")}` } }
+                    },
                     scales: {
-                        x: { display: false },
-                        y: { ticks: { color: '#cbd5e1', font: { size: 10 } }, grid: { display: false } }
+                        x: { 
+                            display: true,
+                            grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                            ticks: { 
+                                color: '#94a3b8', 
+                                font: { size: 9 },
+                                callback: val => val >= 1000 ? (val/1000).toFixed(0) + 'k' : val
+                            } 
+                        },
+                        y: { display: true, grid: { display: false }, ticks: { color: '#cbd5e1', font: { size: 10, weight: '600' } } }
                     }
                 }
             });
@@ -651,11 +738,11 @@
         }
 
         function exportarCSV() {
-            if (!listaTablaActual || listaTablaActual.length === 0) return;
+            if (!listaTablaFiltrada || listaTablaFiltrada.length === 0) return;
 
             let csvContent = `data:text/csv;charset=utf-8,${modoAgrupacionActual},Unidades,Cuota_Pct\n`;
             
-            listaTablaActual.forEach(row => {
+            listaTablaFiltrada.forEach(row => {
                 csvContent += `"${row.nombre}",${row.unidades},${row.cuota.toFixed(2)}\n`;
             });
 
