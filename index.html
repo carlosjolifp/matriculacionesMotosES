@@ -77,19 +77,17 @@
             </div>
 
             <!-- FILTROS AVANZADOS -->
-            <div id="panelFiltrosAvanzados" class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 pt-3 border-t border-slate-700/50 sm:border-0 sm:pt-0">
+            <div id="panelFiltrosAvanzados" class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-4 pt-3 border-t border-slate-700/50 sm:border-0 sm:pt-0">
                 
-                <!-- DESPLEGABLE PERSONALIZADO DE MARCAS CON CHECKBOX Y CHIPS DE SELECCIÓN -->
+                <!-- DESPLEGABLE PERSONALIZADO DE MARCAS -->
                 <div class="relative">
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Marcas</label>
                     
-                    <!-- Botón del desplegable -->
                     <button type="button" id="btnDesplegableMarcas" onclick="toggleDropdownMarcas()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg p-2.5 text-left flex justify-between items-center focus:ring-2 focus:ring-blue-500 outline-none">
                         <span id="txtBotonMarcas" class="truncate">Todas las marcas</span>
                         <span class="text-xs text-slate-400 ml-1">▼</span>
                     </button>
 
-                    <!-- Menú emergente con lista de checkboxes -->
                     <div id="menuDesplegableMarcas" class="hidden absolute left-0 right-0 z-50 mt-1 bg-slate-900 border border-slate-700 rounded-lg shadow-xl p-2 max-h-56 flex flex-col">
                         <input type="text" id="buscarMarcaCheck" onkeyup="filtrarListaMarcasCheck()" placeholder="Buscar marca..." class="w-full bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded p-1.5 mb-2 outline-none focus:border-blue-500">
                         
@@ -98,13 +96,27 @@
                         </div>
                     </div>
 
-                    <!-- Etiquetas (Chips) de marcas seleccionadas con botón "x" -->
                     <div id="contenedorChipsMarcas" class="flex flex-wrap gap-1 mt-2">
                         <!-- Chips dinámicos -->
                     </div>
                 </div>
 
-                <!-- Cilindradas Mínima y Máxima en la misma fila -->
+                <!-- FILTRO TIPO DE VEHÍCULO (MOTOS / SCOOTERS) -->
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Tipo de Vehículo</label>
+                    <div class="flex items-center gap-3 bg-slate-900 border border-slate-700 rounded-lg p-2.5 h-[42px]">
+                        <label class="flex items-center gap-1.5 text-xs text-slate-200 cursor-pointer select-none">
+                            <input type="checkbox" id="chkMotos" checked class="w-4 h-4 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-500">
+                            <span>🏍️ Motos</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 text-xs text-slate-200 cursor-pointer select-none">
+                            <input type="checkbox" id="chkScooters" checked class="w-4 h-4 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-500">
+                            <span>🛵 Scooters</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Cilindradas Mínima y Máxima -->
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Cilindrada (cc)</label>
                     <div class="grid grid-cols-2 gap-2">
@@ -272,7 +284,6 @@
                 <!-- CONTROLES DE PAGINACIÓN Y EXPORTACIÓN -->
                 <div class="p-4 bg-slate-900/60 border-t border-slate-700/60 flex flex-col md:flex-row items-center justify-between gap-4">
                     
-                    <!-- Info registros y selector por página -->
                     <div class="flex flex-wrap items-center justify-between sm:justify-start gap-3 w-full md:w-auto text-xs text-slate-400">
                         <span id="txtInfoTabla">Mostrando registros...</span>
                         
@@ -288,7 +299,6 @@
                         </div>
                     </div>
 
-                    <!-- Botones de navegación de página -->
                     <div id="contenedorPaginacion" class="flex items-center justify-center gap-2 w-full md:w-auto">
                         <button id="btnPagAnt" onclick="cambiarPagina(-1)" class="bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs px-3 py-1.5 rounded transition">
                             ◀ Anterior
@@ -299,7 +309,6 @@
                         </button>
                     </div>
 
-                    <!-- Botones de exportación -->
                     <div class="flex items-center gap-2 w-full md:w-auto">
                         <button onclick="exportarCSV()" class="flex-1 md:flex-initial bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium text-xs px-3.5 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5">
                             <span>📄</span>
@@ -324,7 +333,7 @@
 
     </div>
 
-    <!-- SCRIPT LÓGICO -->
+    <!-- SCRIPT LÓGICO CORTÓ Y OPTIMIZADO -->
     <script>
         let indexGlobal = [];
         let datosAcumulados = [];
@@ -334,7 +343,6 @@
         let listaTablaFiltrada = [];
         let modoAgrupacionActual = 'MARCA';
         
-        // VARIABLES DE ORDENAMIENTO
         let columnaOrdenActual = 'unidades';
         let ordenAscendente = false;
 
@@ -363,108 +371,6 @@
         const PALETA_SECUNDARIA = [
             '#8b5cf6', '#ec4899', '#f97316', '#10b981', '#3b82f6', '#64748b'
         ];
-
-        // DICCIONARIO COMPLETO DE HOMOLOGACIONES DGT A NOMBRES COMERCIALES
-        const DICCIONARIO_MODELOS = {
-            // HONDA
-            "WW125": "PCX 125", "WW 125": "PCX 125", "PCX125": "PCX 125", "JK05": "PCX 125",
-            "SH125": "Scoopy SH125i", "SH125AD": "Scoopy SH125i", "SH 125": "Scoopy SH125i", "JF90": "Scoopy SH125i",
-            "ADV350": "ADV 350", "ADV 350": "ADV 350", "NF13": "ADV 350",
-            "NSS125": "Forza 125", "NSS 125": "Forza 125", "JK02": "Forza 125",
-            "NSS350": "Forza 350", "NSS 350": "Forza 350", "NF10": "Forza 350",
-            "NSS750": "Forza 750", "RH11": "Forza 750",
-            "CB125R": "CB125R", "CBF125": "CB125F",
-            "CB500X": "CB500X", "PC64": "CB500X", "NX500": "NX500", "PC70": "NX500",
-            "CB750": "CB750 Hornet", "CB 750": "CB750 Hornet", "RH12": "CB750 Hornet",
-            "XL750": "XL750 Transalp", "RD16": "XL750 Transalp",
-            "CRF1100": "CRF1100L Africa Twin", "SD08": "CRF1100L Africa Twin", "SD09": "CRF1100L Africa Twin",
-            "X-ADV": "X-ADV 750", "XADV": "X-ADV 750", "RC95": "X-ADV 750", "RH10": "X-ADV 750",
-            "CMX500": "Rebel 500",
-
-            // YAMAHA
-            "GPD125": "NMAX 125", "GPD 125": "NMAX 125", "SEC7": "NMAX 125", "SE86": "NMAX 125",
-            "MWD125": "Tricity 125",
-            "CZD300": "XMAX 300", "CZD 300": "XMAX 300", "SH14": "XMAX 300",
-            "SH08": "XMAX 125", "SEE1": "XMAX 125",
-            "XP500": "TMAX 560", "XP560": "TMAX 560", "SJ18": "TMAX 560",
-            "MT07": "MT-07", "MT 07": "MT-07", "RM17": "MT-07", "RM33": "MT-07", "RM40": "MT-07",
-            "MT09": "MT-09", "MT 09": "MT-09", "RN69": "MT-09", "RN87": "MT-09",
-            "MT125": "MT-125", "RE40": "MT-125",
-            "XTZ690": "Ténéré 700", "TENERE 700": "Ténéré 700", "DM07": "Ténéré 700", "DM11": "Ténéré 700",
-            "TRACER 9": "Tracer 9", "MTT890": "Tracer 9", "RN70": "Tracer 9",
-            "TRACER 7": "Tracer 7", "MTT690": "Tracer 7",
-
-            // KAWASAKI
-            "Z900": "Z900", "Z 900": "Z900", "ZR900B": "Z900", "ZR900F": "Z900", "ZR900H": "Z900 (A2)",
-            "Z650": "Z650", "ER650H": "Z650", "Z125": "Z125", "BR125K": "Z125",
-            "KLE650": "Versys 650", "VERSYS 650": "Versys 650",
-            "EX400": "Ninja 400", "EX500": "Ninja 500",
-
-            // SUZUKI
-            "UH125": "Burgman 125", "UH 125": "Burgman 125", "AM121": "Burgman Street 125EX",
-            "DL650": "V-Strom 650", "DL 650": "V-Strom 650", "DL800": "V-Strom 800",
-            "GSX-8S": "GSX-8S", "GSX8S": "GSX-8S", "GSX-S1000GT": "GSX-S1000GT",
-
-            // KYMCO
-            "AGILITY CITY 125": "Agility City 125", "AGILITY 125": "Agility City 125", "C10000": "Agility City 125",
-            "C11000": "Agility S 125", "DTX 125": "DTX 125", "DTX 350": "DTX 350", "SK25": "DTX 125",
-            "SUPER DINK 125": "Super Dink 125", "V20000": "Super Dink 125",
-            "XCITING 400": "Xciting VS 400", "AK550": "AK 550 Premium", "AK 550": "AK 550 Premium",
-
-            // SYM
-            "SYMPHONY 125": "Symphony 125", "SYMPHONY ST": "Symphony ST 125", "SYMPHONY SR": "Symphony SR 125", "LX12W": "Symphony 125",
-            "JET 14 125": "Jet 14 125", "JET 14": "Jet 14 125",
-            "XCITY 125": "Cruisym Alpha 125", "CRUISYM 125": "Cruisym Alpha 125",
-            "MAXSYM TL": "Maxsym TL 508", "MAXSYM 508": "Maxsym TL 508",
-
-            // BMW
-            "R1250GS": "R 1250 GS", "R 1250 GS": "R 1250 GS", "1G13": "R 1250 GS",
-            "R1300GS": "R 1300 GS", "R 1300 GS": "R 1300 GS", "GG13": "R 1300 GS",
-            "F850GS": "F 850 GS", "F900XR": "F 900 XR", "F900R": "F 900 R",
-            "CE04": "CE 04", "CE 04": "CE 04", "C400X": "C 400 X", "C400GT": "C 400 GT",
-
-            // VOGE
-            "900DSX": "900DSX", "900 DSX": "900DSX", "525DSX": "525DSX", "525 DSX": "525DSX",
-            "SR4 MAX": "SR4 Max", "SR1": "SR1 125", "SR1 125": "SR1 125", "500DS": "500DS",
-
-            // ZONTES
-            "E350": "E350", "E 350": "E350", "D350": "D350", "M350": "M350",
-            "M125": "M125", "D125": "D125", "350T": "350-T", "310T": "310-T",
-
-            // PIAGGIO / VESPA / APRILIA
-            "MEDLEY 125": "Medley 125", "MEDLEY": "Medley 125", "MA02": "Medley 125",
-            "LIBERTY 125": "Liberty 125", "LIBERTY": "Liberty 125",
-            "MP3 300": "MP3 300", "MP3 500": "MP3 500",
-            "VESPA PRIMAVERA": "Vespa Primavera 125", "VESPA GTS": "Vespa GTS 300",
-            "SR GT 125": "SR GT 125", "SR GT 200": "SR GT 200", "RS660": "RS 660", "RS 660": "RS 660",
-
-            // KEEWAY / MACBOR / BENELLI
-            "VIACRUCS 125": "Vieste 125", "VIESTE 125": "Vieste 125",
-            "TRK502": "TRK 502 X", "TRK 502": "TRK 502 X", "TRK702": "TRK 702", "TRK 702": "TRK 702 / 702X",
-            "MONTANA XR5": "Montana XR5 500", "EIGHT MILE": "Eight Mile 500"
-        };
-
-        function obtenerNombreComercial(marca, modeloCrudo) {
-            if (!modeloCrudo) return marca;
-            
-            const textoLimpio = modeloCrudo.trim().toUpperCase();
-
-            // 1. Coincidencia exacta
-            if (DICCIONARIO_MODELOS[textoLimpio]) {
-                return `${marca} ${DICCIONARIO_MODELOS[textoLimpio]}`;
-            }
-
-            // 2. Búsqueda por subcadena / palabras clave
-            for (const [clave, valor] of Object.entries(DICCIONARIO_MODELOS)) {
-                if (textoLimpio.includes(clave)) {
-                    return `${marca} ${valor}`;
-                }
-            }
-
-            // 3. Nombre crudo limpio si no coincide
-            const modeloOriginalLimpio = modeloCrudo.replace(/\s+/g, ' ').trim();
-            return `${marca} ${modeloOriginalLimpio}`;
-        }
 
         function obtenerColorMarca(nombreMarca) {
             const marcaUpper = (nombreMarca || '').toUpperCase();
@@ -653,6 +559,9 @@
             const fEstado = document.getElementById("filtroEstado").value;
             const fProp = document.getElementById("filtroPropulsion").value;
 
+            const incluirMotos = document.getElementById("chkMotos").checked;
+            const incluirScooters = document.getElementById("chkScooters").checked;
+
             if (!mesDesde || !mesHasta) return;
             if (mesDesde > mesHasta) {
                 alert("El mes inicial ('Desde') no puede ser posterior al mes final ('Hasta').");
@@ -690,6 +599,11 @@
                         if (fProp === "ELECTRICO" && reg.pro !== "BEV") return;
                         if (fProp === "HYBRIDO" && !["PHEV", "HEV"].includes(reg.pro)) return;
 
+                        // --- FILTRO DIRECTO ULTRARRÁPIDO GRACIAS A PYTHON ---
+                        const esScoot = Boolean(reg.scoot);
+                        if (esScoot && !incluirScooters) return;
+                        if (!esScoot && !incluirMotos) return;
+
                         datosAcumulados.push(reg);
 
                         const marca = reg.mar || "DESCONOCIDA";
@@ -724,9 +638,8 @@
 
             datosAcumulados.forEach(r => {
                 const m = r.mar || "DESCONOCIDA";
-                
-                // Mapeo dinámico a Nombre Comercial
-                const mod = obtenerNombreComercial(m, r.mod);
+                // reg.mod ya viene procesado comercialmente desde Python
+                const mod = `${m} ${r.mod}`;
 
                 conteoMarcas[m] = (conteoMarcas[m] || 0) + 1;
                 conteoModelos[mod] = (conteoModelos[mod] || 0) + 1;
@@ -909,7 +822,6 @@
         }
 
         function renderizarTopListasYGraficosMovil() {
-            // LISTA TEXTUAL DE TOP MARCAS
             const contMarcas = document.getElementById("topMarcasLista");
             contMarcas.innerHTML = "";
             resumenMarcasGlobal.slice(0, 10).forEach((item, i) => {
@@ -927,7 +839,6 @@
                     </div>`;
             });
 
-            // LISTA TEXTUAL DE TOP MODELOS
             const contModelos = document.getElementById("topModelosLista");
             contModelos.innerHTML = "";
             resumenModelosGlobal.slice(0, 10).forEach((item, i) => {
@@ -948,13 +859,13 @@
             const top5Marcas = resumenMarcasGlobal.slice(0, 5);
             const top5Modelos = resumenModelosGlobal.slice(0, 5);
 
-            // 1. GRÁFICO TOP MARCAS (DEGRADADO AMARILLO / NARANJA NEÓN)
+            // 1. GRÁFICO TOP MARCAS (AMARILLO / NARANJA NEÓN)
             const canvasMarcas = document.getElementById("chartTopMarcasMovil");
             const ctxMarcas = canvasMarcas.getContext("2d");
 
             const gradientNaranjaAmarillo = ctxMarcas.createLinearGradient(0, 0, 0, 200);
-            gradientNaranjaAmarillo.addColorStop(0, '#f59e0b'); // Amarillo / Ámbar (Arriba)
-            gradientNaranjaAmarillo.addColorStop(1, '#ea580c'); // Naranja Intenso (Abajo)
+            gradientNaranjaAmarillo.addColorStop(0, '#f59e0b');
+            gradientNaranjaAmarillo.addColorStop(1, '#ea580c');
 
             if (chartMarcasMovil) chartMarcasMovil.destroy();
             chartMarcasMovil = new Chart(ctxMarcas, {
@@ -996,13 +907,13 @@
                 }
             });
 
-            // 2. GRÁFICO TOP MODELOS (DEGRADADO VERDE ESMERALDA / VERDE NEÓN)
+            // 2. GRÁFICO TOP MODELOS (VERDE ESMERALDA / VERDE NEÓN)
             const canvasModelos = document.getElementById("chartTopModelosMovil");
             const ctxModelos = canvasModelos.getContext("2d");
 
             const gradientVerde = ctxModelos.createLinearGradient(0, 0, 300, 0);
-            gradientVerde.addColorStop(0, '#059669'); // Verde Esmeralda (Izquierda)
-            gradientVerde.addColorStop(1, '#34d399'); // Verde Neón (Derecha)
+            gradientVerde.addColorStop(0, '#059669');
+            gradientVerde.addColorStop(1, '#34d399');
 
             if (chartModelosMovil) chartModelosMovil.destroy();
             chartModelosMovil = new Chart(ctxModelos, {
