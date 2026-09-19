@@ -18,9 +18,9 @@ DICCIONARIO_MODELOS = {
 PATRONES_SCOOTER = [
     "PCX", "NMAX", "SCOOPY", "SH125", "SH 125", "SH300", "SH350", "AGILITY", "SYMPHONY", 
     "FORZA", "XMAX", "X-MAX", "BURGMAN", "ADV 350", "ADV350", "X-ADV", "XADV", "TMAX", "T-MAX", 
-    "TRICITY", "MEDLEY", "LIBERTY", "VESPA", "JET 14", "JET14", "DTX", "VIESTE", "SR1", "E350",
+    "TRICITY", "MEDLEY", "LIBERTY", "VESPA", "JET 14", "JET14", "DTX", "VIESTE", "SR1", "SR3","SR4","SR16", "E350",
     "D350", "M350", "M125", "D125", "CRUISYM", "MAXSYM", "SUPER DINK", "XCITING", "AK 550", "AK550",
-    "WW125", "GPD125", "SH125AD", "UH125", "CZD300"
+    "WW125", "GPD125", "SH125AD", "UH125", "CZD300", "125X", "125V", "368G", "125M", "368"
 ]
 
 def obtener_nombre_comercial(marca, modelo_crudo):

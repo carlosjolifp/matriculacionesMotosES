@@ -599,7 +599,7 @@
                         if (fProp === "ELECTRICO" && reg.pro !== "BEV") return;
                         if (fProp === "HYBRIDO" && !["PHEV", "HEV"].includes(reg.pro)) return;
 
-                        // --- FILTRO DIRECTO ULTRARRÁPIDO GRACIAS A PYTHON ---
+                        // --- FILTRO DIRECTO ULTRARRÁPIDO GRACIAS A PYTHON---
                         const esScoot = Boolean(reg.scoot);
                         if (esScoot && !incluirScooters) return;
                         if (!esScoot && !incluirMotos) return;
