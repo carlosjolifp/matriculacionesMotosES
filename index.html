@@ -801,8 +801,15 @@
         }
     });
 
-    // GRÁFICO TOP MODELOS
-    const ctxModelos = document.getElementById("chartTopModelosMovil").getContext("2d");
+ // GRÁFICO TOP MODELOS (CON GRADIENTE VERDE Y BORDE)
+    const canvasModelos = document.getElementById("chartTopModelosMovil");
+    const ctxModelos = canvasModelos.getContext("2d");
+
+    // Creación del degradado horizontal (de izquierda a derecha para barras 'y')
+    const gradientVerde = ctxModelos.createLinearGradient(0, 0, 300, 0);
+    gradientVerde.addColorStop(0, '#059669'); // Verde Esmeralda (Base)
+    gradientVerde.addColorStop(1, '#34d399'); // Verde Neón (Extremo)
+
     if (chartModelosMovil) chartModelosMovil.destroy();
     chartModelosMovil = new Chart(ctxModelos, {
         type: 'bar',
@@ -810,7 +817,9 @@
             labels: top5Modelos.map(x => x.nombre),
             datasets: [{
                 data: top5Modelos.map(x => x.unidades),
-                backgroundColor: '#10b981',
+                backgroundColor: gradientVerde,
+                borderColor: '#6ee7b7',
+                borderWidth: 1,
                 borderRadius: 4
             }]
         },
