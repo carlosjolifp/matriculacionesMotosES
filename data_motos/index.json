@@ -1,0 +1,697 @@
+[
+  {
+    "periodo": "2014-12",
+    "total": 6404,
+    "archivo": "2014-12.json"
+  },
+  {
+    "periodo": "2015-01",
+    "total": 6939,
+    "archivo": "2015-01.json"
+  },
+  {
+    "periodo": "2015-02",
+    "total": 7014,
+    "archivo": "2015-02.json"
+  },
+  {
+    "periodo": "2015-03",
+    "total": 11067,
+    "archivo": "2015-03.json"
+  },
+  {
+    "periodo": "2015-04",
+    "total": 11425,
+    "archivo": "2015-04.json"
+  },
+  {
+    "periodo": "2015-05",
+    "total": 13400,
+    "archivo": "2015-05.json"
+  },
+  {
+    "periodo": "2015-06",
+    "total": 15388,
+    "archivo": "2015-06.json"
+  },
+  {
+    "periodo": "2015-07",
+    "total": 17789,
+    "archivo": "2015-07.json"
+  },
+  {
+    "periodo": "2015-08",
+    "total": 9564,
+    "archivo": "2015-08.json"
+  },
+  {
+    "periodo": "2015-09",
+    "total": 12882,
+    "archivo": "2015-09.json"
+  },
+  {
+    "periodo": "2015-10",
+    "total": 11119,
+    "archivo": "2015-10.json"
+  },
+  {
+    "periodo": "2015-11",
+    "total": 8727,
+    "archivo": "2015-11.json"
+  },
+  {
+    "periodo": "2015-12",
+    "total": 8622,
+    "archivo": "2015-12.json"
+  },
+  {
+    "periodo": "2016-01",
+    "total": 8825,
+    "archivo": "2016-01.json"
+  },
+  {
+    "periodo": "2016-02",
+    "total": 9283,
+    "archivo": "2016-02.json"
+  },
+  {
+    "periodo": "2016-03",
+    "total": 11082,
+    "archivo": "2016-03.json"
+  },
+  {
+    "periodo": "2016-04",
+    "total": 13441,
+    "archivo": "2016-04.json"
+  },
+  {
+    "periodo": "2016-05",
+    "total": 14244,
+    "archivo": "2016-05.json"
+  },
+  {
+    "periodo": "2016-06",
+    "total": 17849,
+    "archivo": "2016-06.json"
+  },
+  {
+    "periodo": "2016-07",
+    "total": 16333,
+    "archivo": "2016-07.json"
+  },
+  {
+    "periodo": "2016-08",
+    "total": 11071,
+    "archivo": "2016-08.json"
+  },
+  {
+    "periodo": "2016-09",
+    "total": 14751,
+    "archivo": "2016-09.json"
+  },
+  {
+    "periodo": "2016-10",
+    "total": 12436,
+    "archivo": "2016-10.json"
+  },
+  {
+    "periodo": "2016-11",
+    "total": 12031,
+    "archivo": "2016-11.json"
+  },
+  {
+    "periodo": "2016-12",
+    "total": 15987,
+    "archivo": "2016-12.json"
+  },
+  {
+    "periodo": "2017-02",
+    "total": 7327,
+    "archivo": "2017-02.json"
+  },
+  {
+    "periodo": "2017-03",
+    "total": 11311,
+    "archivo": "2017-03.json"
+  },
+  {
+    "periodo": "2017-04",
+    "total": 11672,
+    "archivo": "2017-04.json"
+  },
+  {
+    "periodo": "2017-05",
+    "total": 14769,
+    "archivo": "2017-05.json"
+  },
+  {
+    "periodo": "2017-06",
+    "total": 17117,
+    "archivo": "2017-06.json"
+  },
+  {
+    "periodo": "2017-07",
+    "total": 15645,
+    "archivo": "2017-07.json"
+  },
+  {
+    "periodo": "2017-08",
+    "total": 10857,
+    "archivo": "2017-08.json"
+  },
+  {
+    "periodo": "2017-09",
+    "total": 12794,
+    "archivo": "2017-09.json"
+  },
+  {
+    "periodo": "2017-10",
+    "total": 12783,
+    "archivo": "2017-10.json"
+  },
+  {
+    "periodo": "2017-11",
+    "total": 11697,
+    "archivo": "2017-11.json"
+  },
+  {
+    "periodo": "2017-12",
+    "total": 8531,
+    "archivo": "2017-12.json"
+  },
+  {
+    "periodo": "2018-01",
+    "total": 10918,
+    "archivo": "2018-01.json"
+  },
+  {
+    "periodo": "2018-02",
+    "total": 9531,
+    "archivo": "2018-02.json"
+  },
+  {
+    "periodo": "2018-03",
+    "total": 11667,
+    "archivo": "2018-03.json"
+  },
+  {
+    "periodo": "2018-04",
+    "total": 13836,
+    "archivo": "2018-04.json"
+  },
+  {
+    "periodo": "2018-05",
+    "total": 17207,
+    "archivo": "2018-05.json"
+  },
+  {
+    "periodo": "2018-06",
+    "total": 17447,
+    "archivo": "2018-06.json"
+  },
+  {
+    "periodo": "2018-07",
+    "total": 17797,
+    "archivo": "2018-07.json"
+  },
+  {
+    "periodo": "2018-08",
+    "total": 12359,
+    "archivo": "2018-08.json"
+  },
+  {
+    "periodo": "2018-09",
+    "total": 15348,
+    "archivo": "2018-09.json"
+  },
+  {
+    "periodo": "2018-10",
+    "total": 14710,
+    "archivo": "2018-10.json"
+  },
+  {
+    "periodo": "2018-11",
+    "total": 10595,
+    "archivo": "2018-11.json"
+  },
+  {
+    "periodo": "2018-12",
+    "total": 10106,
+    "archivo": "2018-12.json"
+  },
+  {
+    "periodo": "2019-01",
+    "total": 11372,
+    "archivo": "2019-01.json"
+  },
+  {
+    "periodo": "2019-02",
+    "total": 11090,
+    "archivo": "2019-02.json"
+  },
+  {
+    "periodo": "2019-03",
+    "total": 15370,
+    "archivo": "2019-03.json"
+  },
+  {
+    "periodo": "2019-04",
+    "total": 14941,
+    "archivo": "2019-04.json"
+  },
+  {
+    "periodo": "2019-05",
+    "total": 18436,
+    "archivo": "2019-05.json"
+  },
+  {
+    "periodo": "2019-06",
+    "total": 18934,
+    "archivo": "2019-06.json"
+  },
+  {
+    "periodo": "2019-07",
+    "total": 20833,
+    "archivo": "2019-07.json"
+  },
+  {
+    "periodo": "2019-08",
+    "total": 12000,
+    "archivo": "2019-08.json"
+  },
+  {
+    "periodo": "2019-09",
+    "total": 15383,
+    "archivo": "2019-09.json"
+  },
+  {
+    "periodo": "2019-10",
+    "total": 16626,
+    "archivo": "2019-10.json"
+  },
+  {
+    "periodo": "2019-11",
+    "total": 13546,
+    "archivo": "2019-11.json"
+  },
+  {
+    "periodo": "2019-12",
+    "total": 10956,
+    "archivo": "2019-12.json"
+  },
+  {
+    "periodo": "2020-01",
+    "total": 12705,
+    "archivo": "2020-01.json"
+  },
+  {
+    "periodo": "2020-02",
+    "total": 13207,
+    "archivo": "2020-02.json"
+  },
+  {
+    "periodo": "2020-03",
+    "total": 8190,
+    "archivo": "2020-03.json"
+  },
+  {
+    "periodo": "2020-04",
+    "total": 853,
+    "archivo": "2020-04.json"
+  },
+  {
+    "periodo": "2020-05",
+    "total": 10196,
+    "archivo": "2020-05.json"
+  },
+  {
+    "periodo": "2020-06",
+    "total": 21373,
+    "archivo": "2020-06.json"
+  },
+  {
+    "periodo": "2020-07",
+    "total": 24205,
+    "archivo": "2020-07.json"
+  },
+  {
+    "periodo": "2020-08",
+    "total": 14116,
+    "archivo": "2020-08.json"
+  },
+  {
+    "periodo": "2020-09",
+    "total": 16190,
+    "archivo": "2020-09.json"
+  },
+  {
+    "periodo": "2020-10",
+    "total": 13731,
+    "archivo": "2020-10.json"
+  },
+  {
+    "periodo": "2020-11",
+    "total": 11243,
+    "archivo": "2020-11.json"
+  },
+  {
+    "periodo": "2020-12",
+    "total": 13123,
+    "archivo": "2020-12.json"
+  },
+  {
+    "periodo": "2021-01",
+    "total": 8075,
+    "archivo": "2021-01.json"
+  },
+  {
+    "periodo": "2021-02",
+    "total": 10555,
+    "archivo": "2021-02.json"
+  },
+  {
+    "periodo": "2021-03",
+    "total": 15621,
+    "archivo": "2021-03.json"
+  },
+  {
+    "periodo": "2021-04",
+    "total": 14894,
+    "archivo": "2021-04.json"
+  },
+  {
+    "periodo": "2021-05",
+    "total": 16097,
+    "archivo": "2021-05.json"
+  },
+  {
+    "periodo": "2021-06",
+    "total": 18964,
+    "archivo": "2021-06.json"
+  },
+  {
+    "periodo": "2021-07",
+    "total": 17895,
+    "archivo": "2021-07.json"
+  },
+  {
+    "periodo": "2021-08",
+    "total": 11604,
+    "archivo": "2021-08.json"
+  },
+  {
+    "periodo": "2021-09",
+    "total": 15699,
+    "archivo": "2021-09.json"
+  },
+  {
+    "periodo": "2021-10",
+    "total": 13941,
+    "archivo": "2021-10.json"
+  },
+  {
+    "periodo": "2021-11",
+    "total": 13337,
+    "archivo": "2021-11.json"
+  },
+  {
+    "periodo": "2021-12",
+    "total": 12504,
+    "archivo": "2021-12.json"
+  },
+  {
+    "periodo": "2022-01",
+    "total": 11817,
+    "archivo": "2022-01.json"
+  },
+  {
+    "periodo": "2022-02",
+    "total": 12751,
+    "archivo": "2022-02.json"
+  },
+  {
+    "periodo": "2022-03",
+    "total": 14978,
+    "archivo": "2022-03.json"
+  },
+  {
+    "periodo": "2022-04",
+    "total": 14358,
+    "archivo": "2022-04.json"
+  },
+  {
+    "periodo": "2022-05",
+    "total": 19457,
+    "archivo": "2022-05.json"
+  },
+  {
+    "periodo": "2022-06",
+    "total": 19819,
+    "archivo": "2022-06.json"
+  },
+  {
+    "periodo": "2022-07",
+    "total": 16461,
+    "archivo": "2022-07.json"
+  },
+  {
+    "periodo": "2022-08",
+    "total": 11723,
+    "archivo": "2022-08.json"
+  },
+  {
+    "periodo": "2022-09",
+    "total": 16036,
+    "archivo": "2022-09.json"
+  },
+  {
+    "periodo": "2022-10",
+    "total": 14510,
+    "archivo": "2022-10.json"
+  },
+  {
+    "periodo": "2022-11",
+    "total": 14999,
+    "archivo": "2022-11.json"
+  },
+  {
+    "periodo": "2022-12",
+    "total": 12090,
+    "archivo": "2022-12.json"
+  },
+  {
+    "periodo": "2023-01",
+    "total": 13410,
+    "archivo": "2023-01.json"
+  },
+  {
+    "periodo": "2023-02",
+    "total": 12729,
+    "archivo": "2023-02.json"
+  },
+  {
+    "periodo": "2023-03",
+    "total": 18233,
+    "archivo": "2023-03.json"
+  },
+  {
+    "periodo": "2023-04",
+    "total": 15853,
+    "archivo": "2023-04.json"
+  },
+  {
+    "periodo": "2023-05",
+    "total": 21529,
+    "archivo": "2023-05.json"
+  },
+  {
+    "periodo": "2023-06",
+    "total": 21503,
+    "archivo": "2023-06.json"
+  },
+  {
+    "periodo": "2023-07",
+    "total": 19781,
+    "archivo": "2023-07.json"
+  },
+  {
+    "periodo": "2023-08",
+    "total": 14904,
+    "archivo": "2023-08.json"
+  },
+  {
+    "periodo": "2023-09",
+    "total": 17406,
+    "archivo": "2023-09.json"
+  },
+  {
+    "periodo": "2023-10",
+    "total": 19073,
+    "archivo": "2023-10.json"
+  },
+  {
+    "periodo": "2023-11",
+    "total": 15989,
+    "archivo": "2023-11.json"
+  },
+  {
+    "periodo": "2023-12",
+    "total": 12424,
+    "archivo": "2023-12.json"
+  },
+  {
+    "periodo": "2024-01",
+    "total": 13860,
+    "archivo": "2024-01.json"
+  },
+  {
+    "periodo": "2024-02",
+    "total": 15557,
+    "archivo": "2024-02.json"
+  },
+  {
+    "periodo": "2024-03",
+    "total": 16492,
+    "archivo": "2024-03.json"
+  },
+  {
+    "periodo": "2024-04",
+    "total": 19439,
+    "archivo": "2024-04.json"
+  },
+  {
+    "periodo": "2024-05",
+    "total": 21491,
+    "archivo": "2024-05.json"
+  },
+  {
+    "periodo": "2024-06",
+    "total": 21027,
+    "archivo": "2024-06.json"
+  },
+  {
+    "periodo": "2024-07",
+    "total": 23015,
+    "archivo": "2024-07.json"
+  },
+  {
+    "periodo": "2024-08",
+    "total": 15668,
+    "archivo": "2024-08.json"
+  },
+  {
+    "periodo": "2024-09",
+    "total": 20331,
+    "archivo": "2024-09.json"
+  },
+  {
+    "periodo": "2024-10",
+    "total": 20785,
+    "archivo": "2024-10.json"
+  },
+  {
+    "periodo": "2024-11",
+    "total": 17140,
+    "archivo": "2024-11.json"
+  },
+  {
+    "periodo": "2024-12",
+    "total": 22480,
+    "archivo": "2024-12.json"
+  },
+  {
+    "periodo": "2025-01",
+    "total": 13992,
+    "archivo": "2025-01.json"
+  },
+  {
+    "periodo": "2025-02",
+    "total": 14463,
+    "archivo": "2025-02.json"
+  },
+  {
+    "periodo": "2025-03",
+    "total": 17979,
+    "archivo": "2025-03.json"
+  },
+  {
+    "periodo": "2025-04",
+    "total": 19854,
+    "archivo": "2025-04.json"
+  },
+  {
+    "periodo": "2025-05",
+    "total": 23617,
+    "archivo": "2025-05.json"
+  },
+  {
+    "periodo": "2025-06",
+    "total": 25357,
+    "archivo": "2025-06.json"
+  },
+  {
+    "periodo": "2025-07",
+    "total": 28885,
+    "archivo": "2025-07.json"
+  },
+  {
+    "periodo": "2025-08",
+    "total": 17076,
+    "archivo": "2025-08.json"
+  },
+  {
+    "periodo": "2025-09",
+    "total": 23275,
+    "archivo": "2025-09.json"
+  },
+  {
+    "periodo": "2025-10",
+    "total": 24397,
+    "archivo": "2025-10.json"
+  },
+  {
+    "periodo": "2025-12",
+    "total": 16856,
+    "archivo": "2025-12.json"
+  },
+  {
+    "periodo": "2026-01",
+    "total": 15946,
+    "archivo": "2026-01.json"
+  },
+  {
+    "periodo": "2026-02",
+    "total": 17405,
+    "archivo": "2026-02.json"
+  },
+  {
+    "periodo": "2026-03",
+    "total": 24869,
+    "archivo": "2026-03.json"
+  },
+  {
+    "periodo": "2026-04",
+    "total": 24334,
+    "archivo": "2026-04.json"
+  },
+  {
+    "periodo": "2026-05",
+    "total": 27092,
+    "archivo": "2026-05.json"
+  },
+  {
+    "periodo": "2026-06",
+    "total": 32330,
+    "archivo": "2026-06.json"
+  },
+  {
+    "periodo": "2026-07",
+    "total": 31124,
+    "archivo": "2026-07.json"
+  },
+  {
+    "periodo": "2026-08",
+    "total": 20742,
+    "archivo": "2026-08.json"
+  }
+]

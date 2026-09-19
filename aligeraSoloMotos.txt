@@ -1,0 +1,97 @@
+import os
+import json
+
+# Carpeta de origen (donde están todos los JSON completos)
+CARPETA_ORIGEN = "data"
+# Carpeta de destino para los JSON ultraligeros de motocicletas (sin ciclomotores)
+CARPETA_DESTINO = "data_motos"
+
+os.makedirs(CARPETA_DESTINO, exist_ok=True)
+
+def aligerar_motos_sin_ciclomotores():
+    if not os.path.exists(CARPETA_ORIGEN):
+        print(f"Error: La carpeta '{CARPETA_ORIGEN}' no existe. Ejecuta primero el script de conversión.")
+        return
+
+    archivos_json = [f for f in os.listdir(CARPETA_ORIGEN) if f.endswith('.json') and f != 'index.json']
+    print(f"Encontrados {len(archivos_json)} archivos JSON en '{CARPETA_ORIGEN}'. Filtrando solo motocicletas...\n")
+
+    index_motos_summary = []
+
+    for archivo in sorted(archivos_json):
+        ruta_origen = os.path.join(CARPETA_ORIGEN, archivo)
+        ruta_destino = os.path.join(CARPETA_DESTINO, archivo)
+
+        try:
+            with open(ruta_origen, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+
+            registros_origen = data.get("registros", [])
+            registros_motos = []
+
+            for r in registros_origen:
+                tipo = r.get("tipoGroup", "")
+                cod_tipo = r.get("codTipo", "")
+                clase_mat = r.get("claseMat", "")
+
+                # 1. Identificar si es Ciclomotor para descartarlo explícitamente
+                is_ciclomotor = (
+                    tipo == "CICLOMOTOR" or 
+                    cod_tipo in ["04", "05"] or 
+                    clase_mat == "6"
+                )
+
+                # 2. Identificar si es Motocicleta
+                is_motocicleta = (
+                    tipo == "MOTOCICLETA" or 
+                    cod_tipo == "50"
+                )
+
+                # Mantener solo si es Motocicleta y NO es Ciclomotor
+                if is_motocicleta and not is_ciclomotor:
+                    registros_motos.append({
+                        "fec": r.get("fecMat", ""),
+                        "mar": r.get("marca", ""),
+                        "mod": r.get("modelo", ""),
+                        "pro": r.get("propulsion", ""),
+                        "cil": r.get("cil", 0),
+                        "cvf": r.get("cvf", 0.0),
+                        "est": r.get("nuevoUsado", "N"),
+                        "tit": r.get("titular", "D")
+                    })
+
+            # Estructura hiper-compacta
+            output_data = {
+                "periodo": data.get("periodo", ""),
+                "total": len(registros_motos),
+                "registros": registros_motos
+            }
+
+            # Guardar JSON comprimido (sin sangrías ni espacios innecesarios)
+            with open(ruta_destino, 'w', encoding='utf-8') as jf:
+                json.dump(output_data, jf, ensure_ascii=False, separators=(',', ':'))
+
+            index_motos_summary.append({
+                "periodo": data.get("periodo", ""),
+                "total": len(registros_motos),
+                "archivo": archivo
+            })
+
+            # Cálculo de reducción de tamaño
+            tam_orig_kb = os.path.getsize(ruta_origen) / 1024
+            tam_dest_kb = os.path.getsize(ruta_destino) / 1024
+            
+            print(f" {archivo}: {len(registros_origen):,} reg. origen -> {len(registros_motos):,} solo motos | Tamaño: {tam_orig_kb:.1f} KB -> {tam_dest_kb:.1f} KB")
+
+        except Exception as e:
+            print(f"Error procesando {archivo}: {e}")
+
+    # Guardar índice global exclusivo para motocicletas
+    ruta_index = os.path.join(CARPETA_DESTINO, "index.json")
+    with open(ruta_index, 'w', encoding='utf-8') as ij:
+        json.dump(index_motos_summary, ij, ensure_ascii=False, indent=2)
+
+    print(f"\n ¡Proceso completado! Archivos de solo motocicletas guardados en '{CARPETA_DESTINO}/'")
+
+if __name__ == "__main__":
+    aligerar_motos_sin_ciclomotores()
