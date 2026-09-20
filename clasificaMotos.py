@@ -70,7 +70,8 @@ PATRONES_SCOOTER = [
     "TRICITY", "MEDLEY", "LIBERTY", "VESPA", "JET 14", "JET14", "DTX", "VIESTE", "SR1", "SR3", "SR4", "SR16", "E350",
     "D350", "M350", "M125", "D125", "CRUISYM", "MAXSYM", "SUPER DINK", "XCITING", "AK 550", "AK550",
     "WW125", "GPD125", "SH125AD", "UH125", "CZD300", "125X", "125V", "368G", "125M", "368",
-    "LCG", "YP", "RAYZR", "RAY ZR", "NSC110", "VISION"
+    "LCG", "YP", "RAYZR", "RAY ZR", "NSC110", "VISION",
+    "SKYTOWN", "SKY TOWN", "SR GT", "SRGT", "ATR", "SILENCE", "S01", "S02", "S03", "E125", "C400", "C 400"
 ]
 
 def limpiar_marca(marca):
